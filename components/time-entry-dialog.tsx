@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -32,24 +32,43 @@ import { cn } from '@/lib/utils';
 
 export function TimeEntryDialog() {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [description, setDescription] = useState('');
-  const [date, setDate] = useState<Date>(new Date());
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [formData, setFormData] = useState({
+    title: '',
+    categoryId: '',
+    description: '',
+    date: new Date(),
+    startTime: '',
+    endTime: '',
+  });
 
   const { categories, addTimeEntry } = useTimeTrackingStore();
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      categoryId: '',
+      description: '',
+      date: new Date(),
+      startTime: '',
+      endTime: '',
+    });
+  };
+
+  useEffect(() => {
+    if (!open) {
+      resetForm();
+    }
+  }, [open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const start = new Date(date);
-    const [startHours, startMinutes] = startTime.split(':');
+    const start = new Date(formData.date);
+    const [startHours, startMinutes] = formData.startTime.split(':');
     start.setHours(parseInt(startHours), parseInt(startMinutes));
 
-    const end = new Date(date);
-    const [endHours, endMinutes] = endTime.split(':');
+    const end = new Date(formData.date);
+    const [endHours, endMinutes] = formData.endTime.split(':');
     end.setHours(parseInt(endHours), parseInt(endMinutes));
 
     if (start >= end) {
@@ -58,20 +77,15 @@ export function TimeEntryDialog() {
     }
 
     addTimeEntry({
-      title,
-      categoryId,
+      title: formData.title,
+      categoryId: formData.categoryId,
       startTime: start,
       endTime: end,
-      description,
+      description: formData.description,
     });
 
     toast.success('Time entry added successfully');
     setOpen(false);
-    setTitle('');
-    setCategoryId('');
-    setDescription('');
-    setStartTime('');
-    setEndTime('');
   };
 
   return (
@@ -88,15 +102,23 @@ export function TimeEntryDialog() {
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
+              value={formData.title}
+              onChange={e =>
+                setFormData(prev => ({ ...prev, title: e.target.value }))
+              }
               required
             />
           </div>
 
           <div className="space-y-2">
             <Label>Category</Label>
-            <Select value={categoryId} onValueChange={setCategoryId} required>
+            <Select
+              value={formData.categoryId}
+              onValueChange={value =>
+                setFormData(prev => ({ ...prev, categoryId: value }))
+              }
+              required
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
@@ -124,18 +146,24 @@ export function TimeEntryDialog() {
                   variant="outline"
                   className={cn(
                     'w-full justify-start text-left font-normal',
-                    !date && 'text-muted-foreground'
+                    !formData.date && 'text-muted-foreground'
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                  {formData.date ? (
+                    format(formData.date, 'PPP')
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={date}
-                  onSelect={date => date && setDate(date)}
+                  selected={formData.date}
+                  onSelect={date =>
+                    date && setFormData(prev => ({ ...prev, date }))
+                  }
                   initialFocus
                 />
               </PopoverContent>
@@ -148,8 +176,10 @@ export function TimeEntryDialog() {
               <Input
                 id="startTime"
                 type="time"
-                value={startTime}
-                onChange={e => setStartTime(e.target.value)}
+                value={formData.startTime}
+                onChange={e =>
+                  setFormData(prev => ({ ...prev, startTime: e.target.value }))
+                }
                 required
               />
             </div>
@@ -158,8 +188,10 @@ export function TimeEntryDialog() {
               <Input
                 id="endTime"
                 type="time"
-                value={endTime}
-                onChange={e => setEndTime(e.target.value)}
+                value={formData.endTime}
+                onChange={e =>
+                  setFormData(prev => ({ ...prev, endTime: e.target.value }))
+                }
                 required
               />
             </div>
@@ -169,8 +201,10 @@ export function TimeEntryDialog() {
             <Label htmlFor="description">Description (Optional)</Label>
             <Input
               id="description"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
+              value={formData.description}
+              onChange={e =>
+                setFormData(prev => ({ ...prev, description: e.target.value }))
+              }
             />
           </div>
 
