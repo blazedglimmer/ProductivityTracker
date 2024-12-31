@@ -1,11 +1,16 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Timer, BarChart3, Calendar, Settings, PieChart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { TimeEntryDialog } from '@/components/time-entry-dialog';
+import { TimeChart } from '@/components/analytics/time-chart';
+import { useTimeTrackingStore } from '@/lib/store';
+import { format } from 'date-fns';
 
 export default function Home() {
+  const { timeEntries, categories } = useTimeTrackingStore();
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -14,6 +19,11 @@ export default function Home() {
         staggerChildren: 0.1,
       },
     },
+  };
+
+  const variants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 },
   };
 
   return (
@@ -44,6 +54,7 @@ export default function Home() {
           ].map(item => (
             <motion.div
               key={item.label}
+              variants={variants}
               whileHover={{ x: 5 }}
               className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent cursor-pointer"
             >
@@ -68,69 +79,54 @@ export default function Home() {
                 Track your time efficiently
               </p>
             </div>
-            <Button size="lg">Start Timer</Button>
+            <TimeEntryDialog />
           </div>
 
-          <div className="grid grid-cols-3 gap-6 mb-8">
-            {[
-              { title: 'Today', value: '5h 23m' },
-              { title: 'This Week', value: '32h 40m' },
-              { title: 'This Month', value: '142h 15m' },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="p-6">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                    {stat.title}
-                  </h3>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                </Card>
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-2 gap-6 mb-8">
+            <TimeChart />
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-4">
+                Recent Time Entries
+              </h2>
+              <div className="space-y-4">
+                {timeEntries.slice(-3).map(entry => {
+                  const category = categories.find(
+                    c => c.categoryId === entry.categoryId
+                  );
+                  return (
+                    <motion.div
+                      key={entry.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="flex items-center justify-between p-4 rounded-lg bg-accent/50"
+                    >
+                      <div>
+                        <h3 className="font-medium">{entry.title}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {format(entry.startTime, 'h:mm a')} -{' '}
+                          {format(entry.endTime, 'h:mm a')}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: category?.color }}
+                        />
+                        <span className="font-semibold">
+                          {Math.round(
+                            (entry.endTime.getTime() -
+                              entry.startTime.getTime()) /
+                              (1000 * 60)
+                          )}
+                          m
+                        </span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </Card>
           </div>
-
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Recent Time Entries</h2>
-            <div className="space-y-4">
-              {[
-                {
-                  project: 'Website Redesign',
-                  duration: '2h 15m',
-                  time: '9:00 AM - 11:15 AM',
-                },
-                {
-                  project: 'Client Meeting',
-                  duration: '1h 00m',
-                  time: '11:30 AM - 12:30 PM',
-                },
-                {
-                  project: 'Bug Fixes',
-                  duration: '2h 45m',
-                  time: '2:00 PM - 4:45 PM',
-                },
-              ].map((entry, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center justify-between p-4 rounded-lg bg-accent/50"
-                >
-                  <div>
-                    <h3 className="font-medium">{entry.project}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {entry.time}
-                    </p>
-                  </div>
-                  <span className="font-semibold">{entry.duration}</span>
-                </motion.div>
-              ))}
-            </div>
-          </Card>
         </motion.div>
       </div>
     </div>
