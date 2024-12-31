@@ -1,15 +1,17 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
+import { useState } from 'react';
 import { Timer, BarChart3, Calendar, Settings, PieChart } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { TimeEntryDialog } from '@/components/time-entry-dialog';
-import { TimeChart } from '@/components/analytics/time-chart';
-import { useTimeTrackingStore } from '@/lib/store';
-import { format } from 'date-fns';
+import { Toaster } from 'sonner';
+import { Timer as TimerSection } from '@/components/sections/timer';
+import { Calendar as CalendarSection } from '@/components/sections/calendar';
+import { Reports } from '@/components/sections/reports';
+import { Dashboard } from '@/components/sections/dashboard';
+import { Settings as SettingsSection } from '@/components/sections/settings';
 
 export default function Home() {
-  const { timeEntries, categories } = useTimeTrackingStore();
+  const [activeSection, setActiveSection] = useState('timer');
 
   const container = {
     hidden: { opacity: 0 },
@@ -26,8 +28,34 @@ export default function Home() {
     show: { opacity: 1, y: 0 },
   };
 
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'timer':
+        return <TimerSection />;
+      case 'calendar':
+        return <CalendarSection />;
+      case 'reports':
+        return <Reports />;
+      case 'dashboard':
+        return <Dashboard />;
+      case 'settings':
+        return <SettingsSection />;
+      default:
+        return <TimerSection />;
+    }
+  };
+
+  const navItems = [
+    { icon: Timer, label: 'Timer', id: 'timer' },
+    { icon: Calendar, label: 'Calendar', id: 'calendar' },
+    { icon: BarChart3, label: 'Reports', id: 'reports' },
+    { icon: PieChart, label: 'Dashboard', id: 'dashboard' },
+    { icon: Settings, label: 'Settings', id: 'settings' },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      <Toaster />
       {/* Sidebar */}
       <div className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border p-4">
         <motion.div
@@ -45,20 +73,19 @@ export default function Home() {
           animate="show"
           className="space-y-2"
         >
-          {[
-            { icon: Timer, label: 'Timer' },
-            { icon: Calendar, label: 'Calendar' },
-            { icon: BarChart3, label: 'Reports' },
-            { icon: PieChart, label: 'Dashboard' },
-            { icon: Settings, label: 'Settings' },
-          ].map(item => (
+          {navItems.map(item => (
             <motion.div
-              key={item.label}
+              key={item.id}
               variants={variants}
               whileHover={{ x: 5 }}
-              className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent cursor-pointer"
+              className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer ${
+                activeSection === item.id
+                  ? 'bg-primary text-primary-foreground'
+                  : 'hover:bg-accent'
+              }`}
+              onClick={() => setActiveSection(item.id)}
             >
-              <item.icon className="h-5 w-5 text-muted-foreground" />
+              <item.icon className="h-5 w-5" />
               <span className="text-sm font-medium">{item.label}</span>
             </motion.div>
           ))}
@@ -72,61 +99,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-5xl mx-auto"
         >
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-1">Welcome back, User</h1>
-              <p className="text-muted-foreground">
-                Track your time efficiently
-              </p>
-            </div>
-            <TimeEntryDialog />
-          </div>
-
-          <div className="grid grid-cols-2 gap-6 mb-8">
-            <TimeChart />
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                Recent Time Entries
-              </h2>
-              <div className="space-y-4">
-                {timeEntries.slice(-3).map(entry => {
-                  const category = categories.find(
-                    c => c.categoryId === entry.categoryId
-                  );
-                  return (
-                    <motion.div
-                      key={entry.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="flex items-center justify-between p-4 rounded-lg bg-accent/50"
-                    >
-                      <div>
-                        <h3 className="font-medium">{entry.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {format(entry.startTime, 'h:mm a')} -{' '}
-                          {format(entry.endTime, 'h:mm a')}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: category?.color }}
-                        />
-                        <span className="font-semibold">
-                          {Math.round(
-                            (entry.endTime.getTime() -
-                              entry.startTime.getTime()) /
-                              (1000 * 60)
-                          )}
-                          m
-                        </span>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </Card>
-          </div>
+          {renderSection()}
         </motion.div>
       </div>
     </div>
