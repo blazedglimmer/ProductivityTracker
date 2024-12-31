@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Timer, BarChart3, Calendar, Settings, PieChart } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Toaster } from 'sonner';
 import { Timer as TimerSection } from '@/components/sections/timer';
 import { Calendar as CalendarSection } from '@/components/sections/calendar';
 import { Reports } from '@/components/sections/reports';
@@ -55,7 +54,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Toaster />
       {/* Sidebar */}
       <div className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border p-4">
         <motion.div
