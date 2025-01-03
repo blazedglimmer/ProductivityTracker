@@ -24,7 +24,7 @@ export function SignUpForm() {
     const formData = new FormData(event.currentTarget);
 
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         body: formData,
       });
