@@ -75,7 +75,7 @@ export async function login(formData: FormData) {
     await signIn('credentials', {
       email,
       password,
-      callbackUrl: '/dashboard',
+      callbackUrl: '/',
     });
   } catch (error) {
     if ((error as Error).message.includes('CredentialsSignin')) {
