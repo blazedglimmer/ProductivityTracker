@@ -1,0 +1,50 @@
+// This is your Prisma schema file
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id          String      @id @default(cuid())
+    name        String?
+    email       String      @unique
+    password    String
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    categories  Category[]
+    timeEntries TimeEntry[]
+}
+
+model Category {
+    id          String      @id @default(cuid())
+    name        String
+    color       String
+    userId      String
+    user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    timeEntries TimeEntry[]
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+
+    @@index([userId])
+}
+
+model TimeEntry {
+    id          String   @id @default(cuid())
+    title       String
+    description String?
+    startTime   DateTime
+    endTime     DateTime
+    userId      String
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    categoryId  String
+    category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@index([userId])
+    @@index([categoryId])
+}
