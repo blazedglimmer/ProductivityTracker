@@ -12,5 +12,5 @@ TODOS:
 9. Proper header section, where Dark mode, user profile, And time-tracker name and logo would come
 10. Add mobile UI, responsive UI with tailwind
 11. get-server-session should be cached
-12. Optimizations, fine tuning
+12. Optimizations, Improve SEO, fine tuning
 13. Respective Color HexCode option, or add manually in categories section
