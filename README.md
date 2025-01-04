@@ -1,36 +1,12 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+TODOS:
 
-## Getting Started
+1. User Profile section - User should be able to set his DP, email, first name, last name, username and add mobile number.
+2. In Timer section - As we start timer it should also update start time, and on timer end it should update end time, and allow us to add category, description things directly there itself additionally.
+3. User can be friend with other users. With this user should be able to track his friends progress also, once they are friend, so in this we need to give search friends functionality also.
+4. We should allow these friends to chat with each other. Later we can make it real time with sockets or graphql subscriptions, but for now with just APIs.
+5. In time entry, we should allow user to write description with TEXT MARKUP so he can write descriptive elaboration of what he has done in those times.
+6. We should allow user to maintain there TODO list and share with their friends.
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+7. In reports section, we should allow user to filter.. daily activity, weekly activity, monthly activity
+8. Each section, should be visible on /section url path, rather than just on root / path
+9. Proper header section, where Dark mode, user profile, And time-tracker name and logo would come

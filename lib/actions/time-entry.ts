@@ -1,3 +1,4 @@
+'use server';
 import { prisma } from '@/lib/prisma';
 import { TimeEntrySchema } from '@/lib/validations/time-entry';
 
