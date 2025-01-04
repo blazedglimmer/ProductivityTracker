@@ -1,33 +1,89 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useTimeTrackingStore } from '@/lib/store';
+import { createCategory } from '@/lib/actions/category';
+// import { getUserCategories } from '@/lib/data';
 import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
+import { Category } from '@/types';
+import { fetchCategories } from '@/lib/api';
 
 export function Settings() {
+  const { data: session } = useSession();
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryColor, setNewCategoryColor] = useState('#000000');
-  const { categories, addCategory } = useTimeTrackingStore();
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const handleAddCategory = (e: React.FormEvent) => {
+  // useEffect(() => {
+  //   async function fetchCategories() {
+  //     if (session?.user?.id) {
+  //       try {
+  //         const userCategories = await getUserCategories(session.user.id);
+  //         setCategories(userCategories);
+  //       } catch (error) {
+  //         console.error({ error });
+  //         toast.error('Failed to fetch categories');
+  //       }
+  //     }
+  //   }
+
+  //   fetchCategories();
+  // }, [session?.user?.id]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const cats = await fetchCategories();
+        setCategories(cats);
+      } catch (error) {
+        console.error({ error });
+        toast.error('Failed to load categories');
+      }
+    }
+
+    loadCategories();
+  }, []);
+
+  const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!session?.user?.id) {
+      toast.error('You must be logged in to add categories');
+      return;
+    }
+
     if (!newCategoryName.trim()) {
       toast.error('Please enter a category name');
       return;
     }
 
-    addCategory({
-      name: newCategoryName,
-      color: newCategoryColor,
-    });
+    const formData = new FormData();
+    formData.append('name', newCategoryName);
+    formData.append('color', newCategoryColor);
 
-    toast.success('Category added successfully');
-    setNewCategoryName('');
-    setNewCategoryColor('#000000');
+    try {
+      const result = await createCategory(session.user.id, formData);
+
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      // Refresh categories
+      const updatedCategories = await fetchCategories();
+      setCategories(updatedCategories);
+
+      toast.success('Category added successfully');
+      setNewCategoryName('');
+      setNewCategoryColor('#000000');
+    } catch (error) {
+      console.error({ error });
+      toast.error('Failed to add category');
+    }
   };
 
   return (
