@@ -10,3 +10,6 @@ TODOS:
 7. In reports section, we should allow user to filter.. daily activity, weekly activity, monthly activity
 8. Each section, should be visible on /section url path, rather than just on root / path
 9. Proper header section, where Dark mode, user profile, And time-tracker name and logo would come
+10. Add mobile UI, responsive UI with tailwind
+11. get-server-session should be cached
+12. Optimizations, fine tuning
