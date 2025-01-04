@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { useTimeTrackingStore } from '@/lib/store';
+// import { getUserTimeEntries, getUserCategories } from '@/lib/data';
+import { fetchCategories, fetchTimeEntries } from '@/lib/api';
 import {
   BarChart,
   Bar,
@@ -11,9 +13,36 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { startOfWeek, endOfWeek, eachDayOfInterval, format } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import { TimeEntry, Category } from '@/types';
+import { toast } from 'sonner';
 
 export function Reports() {
-  const { timeEntries, categories } = useTimeTrackingStore();
+  const { data: session } = useSession();
+  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (session?.user?.id) {
+        try {
+          const [entries, cats] = await Promise.all([
+            // getUserTimeEntries(session.user.id),
+            // getUserCategories(session.user.id),
+            fetchTimeEntries(),
+            fetchCategories(),
+          ]);
+          setTimeEntries(entries);
+          setCategories(cats);
+        } catch (error) {
+          console.error({ error });
+          toast.error('Failed to fetch data');
+        }
+      }
+    }
+
+    fetchData();
+  }, [session?.user?.id]);
 
   const start = startOfWeek(new Date());
   const end = endOfWeek(new Date());
@@ -21,7 +50,8 @@ export function Reports() {
   const weekDays = eachDayOfInterval({ start, end }).map(date => {
     const dayEntries = timeEntries.filter(
       entry =>
-        format(entry.startTime, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+        format(new Date(entry.startTime), 'yyyy-MM-dd') ===
+        format(date, 'yyyy-MM-dd')
     );
 
     const categoryDurations = categories.map(category => {
@@ -31,7 +61,8 @@ export function Reports() {
       const duration = categoryEntries.reduce((acc, entry) => {
         return (
           acc +
-          (entry.endTime.getTime() - entry.startTime.getTime()) /
+          (new Date(entry.endTime).getTime() -
+            new Date(entry.startTime).getTime()) /
             (1000 * 60 * 60)
         );
       }, 0);
