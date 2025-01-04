@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useTimeTrackingStore } from '@/lib/store';
+import { createTimeEntry } from '@/lib/actions/time-entry';
 import { toast } from 'sonner';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -29,8 +29,14 @@ import {
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
+// import { useTimeTrackingStore } from '@/lib/store';
+// import { getUserCategories } from '@/lib/data';
+import { Category } from '@/types';
+import { fetchCategories } from '@/lib/api';
 
 export function TimeEntryDialog() {
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -40,9 +46,7 @@ export function TimeEntryDialog() {
     startTime: '',
     endTime: '',
   });
-
-  const { categories, addTimeEntry } = useTimeTrackingStore();
-
+  // const { categories, addTimeEntry } = useTimeTrackingStore();
   const resetForm = () => {
     setFormData({
       title: '',
@@ -53,6 +57,23 @@ export function TimeEntryDialog() {
       endTime: '',
     });
   };
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const cats = await fetchCategories();
+        setCategories(cats);
+      } catch (error) {
+        console.error({ error });
+        toast.error('Failed to load categories');
+      }
+    }
+
+    if (open) {
+      loadCategories();
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) {
@@ -60,8 +81,13 @@ export function TimeEntryDialog() {
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!session?.user?.id) {
+      toast.error('You must be logged in to add time entries');
+      return;
+    }
 
     const start = new Date(formData.date);
     const [startHours, startMinutes] = formData.startTime.split(':');
@@ -76,16 +102,34 @@ export function TimeEntryDialog() {
       return;
     }
 
-    addTimeEntry({
-      title: formData.title,
-      categoryId: formData.categoryId,
-      startTime: start,
-      endTime: end,
-      description: formData.description,
-    });
+    const formDataToSend = new FormData();
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('categoryId', formData.categoryId);
+    formDataToSend.append('description', formData.description || '');
+    formDataToSend.append('startTime', start.toISOString());
+    formDataToSend.append('endTime', end.toISOString());
 
-    toast.success('Time entry added successfully');
-    setOpen(false);
+    try {
+      const result = await createTimeEntry(session.user.id, formDataToSend);
+      // addTimeEntry({
+      //   title: formData.title,
+      //   categoryId: formData.categoryId,
+      //   startTime: start,
+      //   endTime: end,
+      //   description: formData.description,
+      // });
+
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      toast.success('Time entry added successfully');
+      setOpen(false);
+    } catch (error) {
+      console.error({ error });
+      toast.error('Failed to add time entry');
+    }
   };
 
   return (
