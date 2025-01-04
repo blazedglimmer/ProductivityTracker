@@ -1,12 +1,16 @@
-'use client';
-
 import { Card } from '@/components/ui/card';
-import { useTimeTrackingStore } from '@/lib/store';
+import { TimeEntry, Category } from '@/types';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
-export function TimeDistribution() {
-  const { timeEntries, categories } = useTimeTrackingStore();
+interface TimeDistributionProps {
+  timeEntries: TimeEntry[];
+  categories: Category[];
+}
 
+export function TimeDistribution({
+  timeEntries,
+  categories,
+}: TimeDistributionProps) {
   const categoryData = categories
     .map(category => {
       const categoryEntries = timeEntries.filter(
@@ -15,7 +19,8 @@ export function TimeDistribution() {
       const totalHours = categoryEntries.reduce((acc, entry) => {
         return (
           acc +
-          (entry.endTime.getTime() - entry.startTime.getTime()) /
+          (new Date(entry.endTime).getTime() -
+            new Date(entry.startTime).getTime()) /
             (1000 * 60 * 60)
         );
       }, 0);
