@@ -13,3 +13,4 @@ TODOS:
 10. Add mobile UI, responsive UI with tailwind
 11. get-server-session should be cached
 12. Optimizations, fine tuning
+13. Respective Color HexCode option, or add manually in categories section
