@@ -1,12 +1,16 @@
-'use client';
-
 import { Card } from '@/components/ui/card';
-import { useTimeTrackingStore } from '@/lib/store';
+import { TimeEntry, Category } from '@/types';
 import { format } from 'date-fns';
 
-export function RecentActivity() {
-  const { timeEntries, categories } = useTimeTrackingStore();
+interface RecentActivityProps {
+  timeEntries: TimeEntry[];
+  categories: Category[];
+}
 
+export function RecentActivity({
+  timeEntries,
+  categories,
+}: RecentActivityProps) {
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
@@ -21,7 +25,7 @@ export function RecentActivity() {
               <div>
                 <h3 className="font-medium">{entry.title}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {format(entry.startTime, 'MMM d, h:mm a')}
+                  {format(new Date(entry.startTime), 'MMM d, h:mm a')}
                 </p>
               </div>
               <div
