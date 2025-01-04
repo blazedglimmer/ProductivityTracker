@@ -1,3 +1,5 @@
+'user serer';
+
 import { prisma } from '@/lib/prisma';
 
 export async function getUserByEmail(email: string) {
