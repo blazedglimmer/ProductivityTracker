@@ -2,6 +2,9 @@ export type Category = {
   id: string;
   name: string;
   color: string;
+  userId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type TimeEntry = {
@@ -10,7 +13,11 @@ export type TimeEntry = {
   categoryId: string;
   startTime: Date;
   endTime: Date;
-  description?: string;
+  description?: string | null;
+  userId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  category?: Category;
 };
 
 export type TimeStats = {
