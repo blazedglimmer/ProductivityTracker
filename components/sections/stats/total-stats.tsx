@@ -1,16 +1,19 @@
-'use client';
-
 import { Clock, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { useTimeTrackingStore } from '@/lib/store';
+import { TimeEntry, Category } from '@/types';
 
-export function TotalStats() {
-  const { timeEntries, categories } = useTimeTrackingStore();
+interface TotalStatsProps {
+  timeEntries: TimeEntry[];
+  categories: Category[];
+}
 
+export function TotalStats({ timeEntries, categories }: TotalStatsProps) {
   const totalHours = timeEntries.reduce((acc, entry) => {
     return (
       acc +
-      (entry.endTime.getTime() - entry.startTime.getTime()) / (1000 * 60 * 60)
+      (new Date(entry.endTime).getTime() -
+        new Date(entry.startTime).getTime()) /
+        (1000 * 60 * 60)
     );
   }, 0);
 
