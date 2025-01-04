@@ -1,19 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Card } from '@/components/ui/card';
-import { useTimeTrackingStore } from '@/lib/store';
+// import { getUserTimeEntries, getUserCategories } from '@/lib/data';
+import { fetchCategories, fetchTimeEntries } from '@/lib/api';
 import { format } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import { TimeEntry, Category } from '@/types';
+import { toast } from 'sonner';
 
 export function Calendar() {
+  const { data: session } = useSession();
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const { timeEntries, categories } = useTimeTrackingStore();
+  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (session?.user?.id) {
+        try {
+          const [entries, cats] = await Promise.all([
+            // getUserTimeEntries(session.user.id),
+            // getUserCategories(session.user.id),
+            fetchTimeEntries(),
+            fetchCategories(),
+          ]);
+          setTimeEntries(entries);
+          setCategories(cats);
+        } catch (error) {
+          console.error({ error });
+          toast.error('Failed to fetch data');
+        }
+      }
+    }
+
+    fetchData();
+  }, [session?.user?.id]);
 
   const getDayEntries = (day: Date) => {
     return timeEntries.filter(
       entry =>
-        format(entry.startTime, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd')
+        format(new Date(entry.startTime), 'yyyy-MM-dd') ===
+        format(day, 'yyyy-MM-dd')
     );
   };
 
@@ -42,8 +71,8 @@ export function Calendar() {
                   <div>
                     <h3 className="font-medium">{entry.title}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {format(entry.startTime, 'h:mm a')} -{' '}
-                      {format(entry.endTime, 'h:mm a')}
+                      {format(new Date(entry.startTime), 'h:mm a')} -{' '}
+                      {format(new Date(entry.endTime), 'h:mm a')}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
