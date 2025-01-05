@@ -17,6 +17,8 @@ import { TimeEntry, Category } from '@/types';
 import { toast } from 'sonner';
 import { Pencil, Trash2 } from 'lucide-react';
 import { EditTimeEntryDialog } from '@/components/edit-time-entry-dialog';
+import { DeleteTimeEntryDialog } from '@/components/delete-time-entry-dialog';
+import { hasTimeOverlap } from '@/lib/utils';
 
 export function Calendar() {
   const { data: session } = useSession();
@@ -24,6 +26,9 @@ export function Calendar() {
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [timeEntryToEdit, setTimeEntryToEdit] = useState<TimeEntry | null>(
+    null
+  );
+  const [timeEntryToDelete, setTimeEntryToDelete] = useState<TimeEntry | null>(
     null
   );
 
@@ -58,15 +63,14 @@ export function Calendar() {
   };
 
   const handleDeleteEntry = async (entryId: string) => {
-    if (confirm('Are you sure you want to delete this time entry?')) {
-      try {
-        await deleteTimeEntry(entryId);
-        setTimeEntries(entries => entries.filter(e => e.id !== entryId));
-        toast.success('Time entry deleted successfully');
-      } catch (error) {
-        console.error({ error });
-        toast.error('Failed to delete time entry');
-      }
+    try {
+      await deleteTimeEntry(entryId);
+      setTimeEntries(entries => entries.filter(e => e.id !== entryId));
+      toast.success('Time entry deleted successfully');
+      setTimeEntryToDelete(null);
+    } catch (error) {
+      console.error({ error });
+      toast.error('Failed to delete time entry');
     }
   };
 
@@ -81,6 +85,21 @@ export function Calendar() {
     }
   ) => {
     try {
+      // Check for time overlap
+      if (
+        hasTimeOverlap(
+          timeEntries,
+          updatedData.startTime,
+          updatedData.endTime,
+          entryId
+        )
+      ) {
+        toast.error(
+          'This time slot overlaps with an existing entry. Please choose a different time.'
+        );
+        return;
+      }
+
       await updateTimeEntry(entryId, updatedData);
       const updatedEntries = await fetchTimeEntries();
       setTimeEntries(updatedEntries);
@@ -140,7 +159,7 @@ export function Calendar() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDeleteEntry(entry.id)}
+                        onClick={() => setTimeEntryToDelete(entry)}
                       >
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
@@ -171,6 +190,15 @@ export function Calendar() {
           onConfirm={updatedData =>
             handleEditEntry(timeEntryToEdit.id, updatedData)
           }
+        />
+      )}
+
+      {timeEntryToDelete && (
+        <DeleteTimeEntryDialog
+          timeEntry={timeEntryToDelete}
+          isOpen={!!timeEntryToDelete}
+          onClose={() => setTimeEntryToDelete(null)}
+          onConfirm={() => handleDeleteEntry(timeEntryToDelete.id)}
         />
       )}
     </div>
