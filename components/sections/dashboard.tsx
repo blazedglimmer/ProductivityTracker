@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 import { useEffect, useState } from 'react';
 import { TotalStats } from '@/components/sections/stats/total-stats';
 import { TimeDistribution } from '@/components/sections/stats/time-distribution';

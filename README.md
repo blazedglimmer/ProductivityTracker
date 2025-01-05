@@ -7,7 +7,7 @@ TODOS:
 5. In time entry, we should allow user to write description with TEXT MARKUP so he can write descriptive elaboration of what he has done in those times.
 6. We should allow user to maintain there TODO list and share with their friends. Goals can be set for daily, what things need to be done, note sharing web app
 
-7. In reports section, we should allow user to filter.. daily activity, weekly activity, monthly activity
+7. In reports section, we should allow user to filter.. daily activity, weekly activity, monthly activity, yearly activity (if we can show it properly on UI with proper UI, UX and functionality)
 8. Each section, should be visible on /section url path, rather than just on root / path
 9. Proper header section, where Dark mode, user profile, And time-tracker name and logo would come
 10. Add mobile UI, responsive UI with tailwind
@@ -15,3 +15,4 @@ TODOS:
 12. Optimizations, Improve SEO, fine tuning
 13. Respective Color HexCode option, or add manually in categories section
 14. AUTH updates, google and other options
+15. Push notification service, for reminders, user should be able to set reminders
