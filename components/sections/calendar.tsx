@@ -55,7 +55,7 @@ export function Calendar() {
           mode="single"
           selected={date}
           onSelect={setDate}
-          className="rounded-md border"
+          className="rounded-md border shadow flex justify-center"
         />
       </Card>
       <Card className="p-6">
