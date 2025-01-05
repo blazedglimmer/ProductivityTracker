@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Pencil } from 'lucide-react';
 import { createCategory } from '@/lib/actions/category';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
@@ -14,8 +14,10 @@ import {
   fetchCategories,
   checkCategoryExists,
   deleteCategory,
+  updateCategory,
 } from '@/lib/api';
 import { DeleteCategoryDialog } from '@/components/delete-category-dialog';
+import { EditCategoryDialog } from '@/components/edit-category-dialog';
 
 export function Settings() {
   const { data: session } = useSession();
@@ -25,6 +27,7 @@ export function Settings() {
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
     null
   );
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
   // useEffect(() => {
   //   async function fetchCategories() {
@@ -70,7 +73,6 @@ export function Settings() {
     }
 
     try {
-      // Check if category exists
       const exists = await checkCategoryExists(newCategoryName);
       if (exists) {
         toast.error('A category with this name already exists');
@@ -109,6 +111,23 @@ export function Settings() {
     } catch (error) {
       console.error({ error });
       toast.error('Failed to delete category');
+    }
+  };
+
+  const handleEditCategory = async (updatedData: {
+    name: string;
+    color: string;
+  }) => {
+    if (!categoryToEdit) return;
+
+    try {
+      await updateCategory(categoryToEdit.id, updatedData);
+      await loadCategories();
+      toast.success('Category updated successfully');
+      setCategoryToEdit(null);
+    } catch (error) {
+      console.error({ error });
+      toast.error('Failed to update category');
     }
   };
 
@@ -155,13 +174,22 @@ export function Settings() {
                   />
                   <span>{category.name}</span>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setCategoryToDelete(category)}
-                >
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setCategoryToEdit(category)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setCategoryToDelete(category)}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -174,6 +202,15 @@ export function Settings() {
           isOpen={!!categoryToDelete}
           onClose={() => setCategoryToDelete(null)}
           onConfirm={handleDeleteCategory}
+        />
+      )}
+
+      {categoryToEdit && (
+        <EditCategoryDialog
+          category={categoryToEdit}
+          isOpen={!!categoryToEdit}
+          onClose={() => setCategoryToEdit(null)}
+          onConfirm={handleEditCategory}
         />
       )}
     </div>

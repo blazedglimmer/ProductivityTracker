@@ -42,3 +42,53 @@ export async function deleteCategory(id: string): Promise<void> {
     throw new Error('Failed to delete category');
   }
 }
+
+export async function updateCategory(
+  id: string,
+  data: { name: string; color: string }
+): Promise<void> {
+  const response = await fetch(`/api/categories/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update category');
+  }
+}
+
+export async function deleteTimeEntry(id: string): Promise<void> {
+  const response = await fetch(`/api/time-entries/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete time entry');
+  }
+}
+
+export async function updateTimeEntry(
+  id: string,
+  data: {
+    title: string;
+    description?: string;
+    startTime: Date;
+    endTime: Date;
+    categoryId: string;
+  }
+): Promise<void> {
+  const response = await fetch(`/api/time-entries/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update time entry');
+  }
+}

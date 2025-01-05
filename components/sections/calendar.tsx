@@ -4,17 +4,28 @@ import { useState, useEffect } from 'react';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Card } from '@/components/ui/card';
 // import { getUserTimeEntries, getUserCategories } from '@/lib/data';
-import { fetchCategories, fetchTimeEntries } from '@/lib/api';
+import { Button } from '@/components/ui/button';
+import {
+  fetchCategories,
+  fetchTimeEntries,
+  deleteTimeEntry,
+  updateTimeEntry,
+} from '@/lib/api';
 import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
 import { TimeEntry, Category } from '@/types';
 import { toast } from 'sonner';
+import { Pencil, Trash2 } from 'lucide-react';
+import { EditTimeEntryDialog } from '@/components/edit-time-entry-dialog';
 
 export function Calendar() {
   const { data: session } = useSession();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [timeEntryToEdit, setTimeEntryToEdit] = useState<TimeEntry | null>(
+    null
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -44,6 +55,41 @@ export function Calendar() {
         format(new Date(entry.startTime), 'yyyy-MM-dd') ===
         format(day, 'yyyy-MM-dd')
     );
+  };
+
+  const handleDeleteEntry = async (entryId: string) => {
+    if (confirm('Are you sure you want to delete this time entry?')) {
+      try {
+        await deleteTimeEntry(entryId);
+        setTimeEntries(entries => entries.filter(e => e.id !== entryId));
+        toast.success('Time entry deleted successfully');
+      } catch (error) {
+        console.error({ error });
+        toast.error('Failed to delete time entry');
+      }
+    }
+  };
+
+  const handleEditEntry = async (
+    entryId: string,
+    updatedData: {
+      title: string;
+      description?: string;
+      startTime: Date;
+      endTime: Date;
+      categoryId: string;
+    }
+  ) => {
+    try {
+      await updateTimeEntry(entryId, updatedData);
+      const updatedEntries = await fetchTimeEntries();
+      setTimeEntries(updatedEntries);
+      setTimeEntryToEdit(null);
+      toast.success('Time entry updated successfully');
+    } catch (error) {
+      console.error({ error });
+      toast.error('Failed to update time entry');
+    }
   };
 
   const selectedDayEntries = date ? getDayEntries(date) : [];
@@ -83,8 +129,29 @@ export function Calendar() {
                     <span className="text-sm font-medium">
                       {category?.name}
                     </span>
+                    <div className="flex items-center gap-1 ml-4">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setTimeEntryToEdit(entry)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteEntry(entry.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
+                {entry.description && (
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {entry.description}
+                  </p>
+                )}
               </div>
             );
           })}
@@ -95,6 +162,17 @@ export function Calendar() {
           )}
         </div>
       </Card>
+
+      {timeEntryToEdit && (
+        <EditTimeEntryDialog
+          timeEntry={timeEntryToEdit}
+          isOpen={!!timeEntryToEdit}
+          onClose={() => setTimeEntryToEdit(null)}
+          onConfirm={updatedData =>
+            handleEditEntry(timeEntryToEdit.id, updatedData)
+          }
+        />
+      )}
     </div>
   );
 }
