@@ -34,6 +34,8 @@ import { useSession } from 'next-auth/react';
 // import { getUserCategories } from '@/lib/data';
 import { Category } from '@/types';
 import { fetchCategories } from '@/lib/api';
+import { useTimeEntries } from '@/hooks/use-time-entries';
+import { hasTimeOverlap } from '@/lib/utils';
 
 export function TimeEntryDialog() {
   const { data: session } = useSession();
@@ -47,6 +49,8 @@ export function TimeEntryDialog() {
     endTime: '',
   });
   // const { categories, addTimeEntry } = useTimeTrackingStore();
+  const { timeEntries } = useTimeEntries();
+  const [categories, setCategories] = useState<Category[]>([]);
   const resetForm = () => {
     setFormData({
       title: '',
@@ -57,7 +61,6 @@ export function TimeEntryDialog() {
       endTime: '',
     });
   };
-  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     async function loadCategories() {
@@ -99,6 +102,14 @@ export function TimeEntryDialog() {
 
     if (start >= end) {
       toast.error('End time must be after start time');
+      return;
+    }
+
+    // Check for time overlap
+    if (hasTimeOverlap(timeEntries, start, end)) {
+      toast.error(
+        'This time slot overlaps with an existing entry. Please choose a different time.'
+      );
       return;
     }
 
