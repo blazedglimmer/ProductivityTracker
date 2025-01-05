@@ -14,8 +14,8 @@ export function RecentActivity({
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-      <div className="space-y-4">
-        {timeEntries.slice(-5).map(entry => {
+      <div className="space-y-4 overflow-y-auto sm:h-[calc(100svh-20rem)]">
+        {timeEntries.map(entry => {
           const category = categories.find(c => c.id === entry.categoryId);
           return (
             <div
@@ -25,7 +25,8 @@ export function RecentActivity({
               <div>
                 <h3 className="font-medium">{entry.title}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {format(new Date(entry.startTime), 'MMM d, h:mm a')}
+                  {format(new Date(entry.startTime), 'MMM d, h:mm a')} -{' '}
+                  {format(new Date(entry.endTime), 'MMM d, h:mm a')}
                 </p>
               </div>
               <div

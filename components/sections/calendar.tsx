@@ -62,7 +62,7 @@ export function Calendar() {
         <h2 className="text-xl font-semibold mb-4">
           {date ? format(date, 'MMMM d, yyyy') : 'Select a date'}
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-4 overflow-y-auto sm:h-[calc(100svh-10rem)]">
           {selectedDayEntries.map(entry => {
             const category = categories.find(c => c.id === entry.categoryId);
             return (
