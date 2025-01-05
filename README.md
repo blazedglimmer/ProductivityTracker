@@ -14,4 +14,5 @@ TODOS:
 11. get-server-session should be cached
 12. Optimizations, Improve SEO, fine tuning
 13. Respective Color HexCode option, or add manually in categories section
-14. Edit or Delete time entry functionality
+14. Edit or Delete time entry functionality, Edit categories
+15. AUTH updates, google and other options
