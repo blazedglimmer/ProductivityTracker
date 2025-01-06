@@ -16,3 +16,4 @@ TODOS:
 13. Respective Color HexCode option, or add manually in categories section
 14. AUTH updates, google and other options
 15. Push notification service, for reminders, user should be able to set reminders
+16. store the api data in zustand state, and use it from zustand state unless we don't have data in zustand state, whenever post, patch, delete api call happens at that time u can update the zustand state
