@@ -1,9 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
-// import { getUserTimeEntries, getUserCategories } from '@/lib/data';
-import { fetchCategories, fetchTimeEntries } from '@/lib/api';
 import {
   BarChart,
   Bar,
@@ -13,36 +10,10 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { startOfWeek, endOfWeek, eachDayOfInterval, format } from 'date-fns';
-import { useSession } from 'next-auth/react';
-import { TimeEntry, Category } from '@/types';
-import { toast } from 'sonner';
+import { useTimeEntriesCategories } from '@/hooks/use-time-entries-categories';
 
 export function Reports() {
-  const { data: session } = useSession();
-  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      if (session?.user?.id) {
-        try {
-          const [entries, cats] = await Promise.all([
-            // getUserTimeEntries(session.user.id),
-            // getUserCategories(session.user.id),
-            fetchTimeEntries(),
-            fetchCategories(),
-          ]);
-          setTimeEntries(entries);
-          setCategories(cats);
-        } catch (error) {
-          console.error({ error });
-          toast.error('Failed to fetch data');
-        }
-      }
-    }
-
-    fetchData();
-  }, [session?.user?.id]);
+  const { timeEntries, categories } = useTimeEntriesCategories();
 
   const start = startOfWeek(new Date());
   const end = endOfWeek(new Date());
