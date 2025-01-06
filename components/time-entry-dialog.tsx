@@ -30,8 +30,6 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
-// import { useTimeTrackingStore } from '@/lib/store';
-// import { getUserCategories } from '@/lib/data';
 import { Category } from '@/types';
 import { fetchCategories } from '@/lib/api';
 import { useTimeEntries } from '@/hooks/use-time-entries';
@@ -48,7 +46,7 @@ export function TimeEntryDialog() {
     startTime: '',
     endTime: '',
   });
-  // const { categories, addTimeEntry } = useTimeTrackingStore();
+
   const { timeEntries } = useTimeEntries();
   const [categories, setCategories] = useState<Category[]>([]);
   const resetForm = () => {
@@ -122,13 +120,6 @@ export function TimeEntryDialog() {
 
     try {
       const result = await createTimeEntry(session.user.id, formDataToSend);
-      // addTimeEntry({
-      //   title: formData.title,
-      //   categoryId: formData.categoryId,
-      //   startTime: start,
-      //   endTime: end,
-      //   description: formData.description,
-      // });
 
       if (result?.error) {
         toast.error(result.error);

@@ -29,22 +29,6 @@ export function Settings() {
   );
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
-  // useEffect(() => {
-  //   async function fetchCategories() {
-  //     if (session?.user?.id) {
-  //       try {
-  //         const userCategories = await getUserCategories(session.user.id);
-  //         setCategories(userCategories);
-  //       } catch (error) {
-  //         console.error({ error });
-  //         toast.error('Failed to fetch categories');
-  //       }
-  //     }
-  //   }
-
-  //   fetchCategories();
-  // }, [session?.user?.id]);
-
   useEffect(() => {
     loadCategories();
   }, []);
