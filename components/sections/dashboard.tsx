@@ -19,17 +19,21 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useInView } from 'react-intersection-observer';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 import {
   getFilteredTimeEntries,
   getCategories,
 } from '@/lib/actions/time-entries';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 type TimeRange = 'today' | 'week' | 'month' | 'year' | 'custom';
 
 interface TimeEntry {
   id: string;
   title: string;
-  description: string | null; // Allow null
+  description: string | null;
   startTime: Date;
   endTime: Date;
   category: Category;
@@ -41,9 +45,19 @@ interface Category {
   color: string;
 }
 
+interface ChartData {
+  labels: string[];
+  datasets: {
+    data: number[];
+    backgroundColor: string[];
+    borderColor: string[];
+    borderWidth: number;
+  }[];
+}
+
 export function Dashboard() {
   const [timeRange, setTimeRange] = useState<TimeRange>('today');
-  const [categoryId, setCategoryId] = useState<string>('all'); // Initialize with 'all'
+  const [categoryId, setCategoryId] = useState<string>('all');
   const [customDateRange, setCustomDateRange] = useState<{
     from: Date | undefined;
     to: Date | undefined;
@@ -53,6 +67,17 @@ export function Dashboard() {
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  const [chartData, setChartData] = useState<ChartData>({
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
+        borderWidth: 1,
+      },
+    ],
+  });
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isPending, startTransition] = useTransition();
@@ -97,6 +122,43 @@ export function Dashboard() {
     }
   };
 
+  const updateChartData = (entries: TimeEntry[]) => {
+    const categoryDurations = new Map<string, number>();
+    const categoryColors = new Map<string, string>();
+
+    entries.forEach(entry => {
+      const duration =
+        new Date(entry.endTime).getTime() - new Date(entry.startTime).getTime();
+      const categoryName = entry.category.name;
+      categoryColors.set(categoryName, entry.category.color);
+      categoryDurations.set(
+        categoryName,
+        (categoryDurations.get(categoryName) || 0) + duration
+      );
+    });
+
+    const labels = Array.from(categoryDurations.keys());
+    const data = Array.from(categoryDurations.values()).map(
+      duration => duration / (1000 * 60 * 60)
+    ); // Convert to hours
+    const backgroundColor = labels.map(
+      label => categoryColors.get(label) || '#000000'
+    );
+    const borderColor = backgroundColor.map(color => color);
+
+    setChartData({
+      labels,
+      datasets: [
+        {
+          data,
+          backgroundColor,
+          borderColor,
+          borderWidth: 1,
+        },
+      ],
+    });
+  };
+
   const loadTimeEntries = useCallback(
     async (reset = false) => {
       const currentPage = reset ? 1 : page;
@@ -108,28 +170,17 @@ export function Dashboard() {
         const result = await getFilteredTimeEntries(
           startDate,
           endDate,
-          categoryId === 'all' ? undefined : categoryId, // Handle 'all' case
+          categoryId === 'all' ? undefined : categoryId,
           currentPage,
           20
         );
 
-        setTimeEntries(prev =>
-          reset ? result.timeEntries : [...prev, ...result.timeEntries]
-        );
-        // setTimeEntries(prev => {
-        //   if (reset) return result.timeEntries;
+        const newEntries = reset
+          ? result.timeEntries
+          : [...timeEntries, ...result.timeEntries];
 
-        //   // Create a Set of existing IDs for O(1) lookup
-        //   const existingIds = new Set(prev.map(entry => entry.id));
-
-        //   // Filter out any duplicates from the new entries
-        //   const newEntries = result.timeEntries.filter(
-        //     entry => !existingIds.has(entry.id)
-        //   );
-
-        //   return [...prev, ...newEntries];
-        // });
-
+        setTimeEntries(newEntries);
+        updateChartData(newEntries);
         setHasMore(result.hasMore);
         if (!reset) {
           setPage(prev => prev + 1);
@@ -140,7 +191,7 @@ export function Dashboard() {
         setIsLoading(false);
       }
     },
-    [page, timeRange, categoryId, customDateRange]
+    [page, timeRange, categoryId, customDateRange, timeEntries]
   );
 
   useEffect(() => {
@@ -246,6 +297,36 @@ export function Dashboard() {
         </Select>
       </div>
 
+      {/* Chart Section */}
+      {timeEntries.length > 0 && (
+        <div className="bg-card p-6 rounded-lg border border-border">
+          <h2 className="text-lg font-semibold mb-4">
+            Time Distribution by Category
+          </h2>
+          <div className="w-full max-w-md mx-auto">
+            <Pie
+              data={chartData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'bottom',
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function (context) {
+                        const hours = context.raw as number;
+                        return `${hours.toFixed(1)} hours`;
+                      },
+                    },
+                  },
+                },
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="space-y-4">
         {isLoading ? (
           <div className="text-center py-4">Loading...</div>
@@ -277,7 +358,6 @@ export function Dashboard() {
               </div>
             ))}
 
-            {/* Loading indicator */}
             <div ref={ref}>
               {isPending && (
                 <div className="text-center py-4">Loading more...</div>
