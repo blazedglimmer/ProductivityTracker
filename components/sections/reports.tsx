@@ -57,7 +57,7 @@ ChartJS.register(
   Legend
 );
 
-type TimeRange = 'today' | 'week' | 'month' | 'custom';
+type TimeRange = 'today' | 'week' | 'month' | 'year' | 'custom';
 
 interface TimeEntry {
   id: string;
@@ -131,6 +131,11 @@ export function Reports() {
         const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
         const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
         return { startDate: monthStart, endDate: monthEnd };
+      }
+      case 'year': {
+        const yearStart = new Date(today.getFullYear(), 0, 1);
+        const yearEnd = new Date(today.getFullYear(), 11, 31);
+        return { startDate: yearStart, endDate: yearEnd };
       }
       case 'custom':
         return {
@@ -290,6 +295,7 @@ export function Reports() {
             <SelectItem value="today">Today</SelectItem>
             <SelectItem value="week">This Week</SelectItem>
             <SelectItem value="month">This Month</SelectItem>
+            <SelectItem value="year">This Year</SelectItem>
             <SelectItem value="custom">Custom Range</SelectItem>
           </SelectContent>
         </Select>
