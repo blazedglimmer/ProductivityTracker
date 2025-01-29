@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,16 +34,29 @@ import { fetchCategories } from '@/lib/api';
 import { useTimeEntries } from '@/hooks/use-time-entries';
 import { hasTimeOverlap } from '@/lib/utils';
 
-export function TimeEntryDialog() {
+interface TimeEntryDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialDate?: Date | undefined;
+  initialTime?: Date | null;
+}
+
+export function TimeEntryDialog({
+  isOpen,
+  onClose,
+  initialDate,
+  initialTime,
+}: TimeEntryDialogProps) {
   const { data: session } = useSession();
-  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     categoryId: '',
     description: '',
-    date: new Date(),
-    startTime: '',
-    endTime: '',
+    date: initialDate || new Date(),
+    startTime: initialTime ? format(initialTime, 'HH:mm') : '',
+    endTime: initialTime
+      ? format(new Date(initialTime.getTime() + 60 * 60 * 1000), 'HH:mm')
+      : '', // Default to 1 hour duration
   });
 
   const { timeEntries } = useTimeEntries();
@@ -54,9 +66,11 @@ export function TimeEntryDialog() {
       title: '',
       categoryId: '',
       description: '',
-      date: new Date(),
-      startTime: '',
-      endTime: '',
+      date: initialDate || new Date(),
+      startTime: initialTime ? format(initialTime, 'HH:mm') : '',
+      endTime: initialTime
+        ? format(new Date(initialTime.getTime() + 60 * 60 * 1000), 'HH:mm')
+        : '',
     });
   };
 
@@ -71,16 +85,17 @@ export function TimeEntryDialog() {
       }
     }
 
-    if (open) {
+    if (isOpen) {
       loadCategories();
     }
-  }, [open]);
+  }, [isOpen]);
 
   useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       resetForm();
     }
-  }, [open]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, initialDate, initialTime]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,7 +142,7 @@ export function TimeEntryDialog() {
       }
 
       toast.success('Time entry added successfully');
-      setOpen(false);
+      onClose();
     } catch (error) {
       console.error({ error });
       toast.error('Failed to add time entry');
@@ -135,10 +150,7 @@ export function TimeEntryDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="lg">Add Time Entry</Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add Time Entry</DialogTitle>
