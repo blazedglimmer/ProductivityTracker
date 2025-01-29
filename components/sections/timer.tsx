@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Play, Pause, Square } from 'lucide-react';
-
 import { TimeEntryDialog } from '@/components/time-entry-dialog';
 import { toast } from 'sonner';
 
 export function Timer() {
   const [isRunning, setIsRunning] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -33,18 +34,28 @@ export function Timer() {
 
   const handleStart = () => {
     setIsRunning(true);
+    setStartTime(new Date());
     toast.success('Timer started');
   };
 
   const handlePause = () => {
     setIsRunning(false);
+    setShowDialog(true);
     toast.info('Timer paused');
   };
 
   const handleReset = () => {
+    if (seconds > 0) {
+      setShowDialog(true);
+    }
     setIsRunning(false);
     setSeconds(0);
+    setStartTime(null);
     toast.info('Timer reset');
+  };
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
   };
 
   return (
@@ -65,10 +76,18 @@ export function Timer() {
             <Button onClick={handleReset} size="lg" variant="outline">
               <Square className="mr-2 h-4 w-4" /> Reset
             </Button>
-            <TimeEntryDialog />
           </div>
         </div>
       </Card>
+
+      {showDialog && startTime && (
+        <TimeEntryDialog
+          isOpen={showDialog}
+          onClose={handleCloseDialog}
+          initialDate={startTime}
+          initialTime={startTime}
+        />
+      )}
     </div>
   );
 }
