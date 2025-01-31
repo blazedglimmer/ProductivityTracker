@@ -11,12 +11,23 @@ generator client {
 model User {
     id          String      @id @default(cuid())
     name        String?
+    username    String?     @unique
     email       String      @unique
     password    String
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
     categories  Category[]
     timeEntries TimeEntry[]
+
+    // Friend system
+    sentFriendRequests     Friendship[] @relation("requester")
+    receivedFriendRequests Friendship[] @relation("addressee")
+
+    // Messages
+    sentMessages     Message[] @relation("sender")
+    receivedMessages Message[] @relation("receiver")
+
+    @@index([username])
 }
 
 model Category {
@@ -47,4 +58,37 @@ model TimeEntry {
 
     @@index([userId])
     @@index([categoryId])
+}
+
+model Friendship {
+    id          String           @id @default(cuid())
+    requesterId String
+    addresseeId String
+    status      FriendshipStatus @default(PENDING)
+    requester   User             @relation("requester", fields: [requesterId], references: [id], onDelete: Cascade)
+    addressee   User             @relation("addressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+    createdAt   DateTime         @default(now())
+    updatedAt   DateTime         @updatedAt
+
+    @@index([requesterId, addresseeId])
+}
+
+model Message {
+    id         String   @id @default(cuid())
+    content    String
+    senderId   String
+    receiverId String
+    read       Boolean  @default(false)
+    sender     User     @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+    receiver   User     @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@index([senderId, receiverId])
+}
+
+enum FriendshipStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
 }
