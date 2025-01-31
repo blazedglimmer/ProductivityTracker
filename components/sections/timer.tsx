@@ -11,6 +11,7 @@ export function Timer() {
   const [isRunning, setIsRunning] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
+  const [endTime, setEndTime] = useState<Date | null>(null);
   const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
@@ -40,12 +41,14 @@ export function Timer() {
 
   const handlePause = () => {
     setIsRunning(false);
+    setEndTime(new Date());
     setShowDialog(true);
     toast.info('Timer paused');
   };
 
   const handleReset = () => {
     if (seconds > 0) {
+      setEndTime(new Date());
       setShowDialog(true);
     }
     setIsRunning(false);
@@ -56,6 +59,7 @@ export function Timer() {
 
   const handleCloseDialog = () => {
     setShowDialog(false);
+    setEndTime(null);
   };
 
   return (
@@ -80,12 +84,13 @@ export function Timer() {
         </div>
       </Card>
 
-      {showDialog && startTime && (
+      {showDialog && startTime && endTime && (
         <TimeEntryDialog
           isOpen={showDialog}
           onClose={handleCloseDialog}
           initialDate={startTime}
           initialTime={startTime}
+          initialEndTime={endTime}
         />
       )}
     </div>

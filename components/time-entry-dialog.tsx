@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -37,8 +38,9 @@ import { hasTimeOverlap } from '@/lib/utils';
 interface TimeEntryDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  initialDate?: Date | undefined;
+  initialDate?: Date;
   initialTime?: Date | null;
+  initialEndTime?: Date | null;
 }
 
 export function TimeEntryDialog({
@@ -46,6 +48,7 @@ export function TimeEntryDialog({
   onClose,
   initialDate,
   initialTime,
+  initialEndTime,
 }: TimeEntryDialogProps) {
   const { data: session } = useSession();
   const [formData, setFormData] = useState({
@@ -54,13 +57,16 @@ export function TimeEntryDialog({
     description: '',
     date: initialDate || new Date(),
     startTime: initialTime ? format(initialTime, 'HH:mm') : '',
-    endTime: initialTime
+    endTime: initialEndTime
+      ? format(initialEndTime, 'HH:mm')
+      : initialTime
       ? format(new Date(initialTime.getTime() + 60 * 60 * 1000), 'HH:mm')
-      : '', // Default to 1 hour duration
+      : '',
   });
 
   const { timeEntries } = useTimeEntries();
   const [categories, setCategories] = useState<Category[]>([]);
+
   const resetForm = () => {
     setFormData({
       title: '',
@@ -68,7 +74,9 @@ export function TimeEntryDialog({
       description: '',
       date: initialDate || new Date(),
       startTime: initialTime ? format(initialTime, 'HH:mm') : '',
-      endTime: initialTime
+      endTime: initialEndTime
+        ? format(initialEndTime, 'HH:mm')
+        : initialTime
         ? format(new Date(initialTime.getTime() + 60 * 60 * 1000), 'HH:mm')
         : '',
     });
@@ -94,8 +102,7 @@ export function TimeEntryDialog({
     if (!isOpen) {
       resetForm();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, initialDate, initialTime]);
+  }, [isOpen, initialDate, initialTime, initialEndTime]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
