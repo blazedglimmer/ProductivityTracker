@@ -5,8 +5,9 @@ import { authOptions } from '@/lib/actions/auth';
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id: userId } = await params;
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -16,7 +17,7 @@ export async function PATCH(
     const { status } = await request.json();
 
     const friendRequest = await prisma.friendship.findUnique({
-      where: { id: params.id },
+      where: { id: userId },
       include: { requester: true, addressee: true },
     });
 
@@ -32,7 +33,7 @@ export async function PATCH(
     }
 
     const updatedRequest = await prisma.friendship.update({
-      where: { id: params.id },
+      where: { id: userId },
       data: { status },
       include: { requester: true, addressee: true },
     });
@@ -46,3 +47,20 @@ export async function PATCH(
     );
   }
 }
+
+// include: {
+//     requester: {
+//       select: {
+//         id: true,
+//         name: true,
+//         username: true,
+//       },
+//     },
+//     addressee: {
+//       select: {
+//         id: true,
+//         name: true,
+//         username: true,
+//       },
+//     },
+//   },
