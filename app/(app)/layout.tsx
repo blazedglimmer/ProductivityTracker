@@ -1,6 +1,13 @@
 'use client';
 
-import { Timer, BarChart3, Calendar, Settings, PieChart } from 'lucide-react';
+import {
+  Timer,
+  BarChart3,
+  Calendar,
+  Settings,
+  PieChart,
+  User,
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -29,6 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { icon: BarChart3, label: 'Reports', path: '/reports' },
     { icon: PieChart, label: 'Dashboard', path: '/dashboard' },
     { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: User, label: 'Friends', path: '/friends' },
   ];
 
   return (

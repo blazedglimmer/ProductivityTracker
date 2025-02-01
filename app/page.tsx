@@ -1,13 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { Timer, BarChart3, Calendar, Settings, PieChart } from 'lucide-react';
+import {
+  Timer,
+  BarChart3,
+  Calendar,
+  Settings,
+  PieChart,
+  User,
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Timer as TimerSection } from '@/components/sections/timer';
 import { Calendar as CalendarSection } from '@/components/sections/calendar';
 import { Reports } from '@/components/sections/reports';
 import { Dashboard } from '@/components/sections/dashboard';
 import { Settings as SettingsSection } from '@/components/sections/settings';
+import { Friends } from '@/components/sections/friends';
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('timer');
@@ -39,6 +47,8 @@ export default function Home() {
         return <Dashboard />;
       case 'settings':
         return <SettingsSection />;
+      case 'friends':
+        return <Friends />;
       default:
         return <TimerSection />;
     }
@@ -50,6 +60,7 @@ export default function Home() {
     { icon: BarChart3, label: 'Reports', id: 'reports' },
     { icon: PieChart, label: 'Dashboard', id: 'dashboard' },
     { icon: Settings, label: 'Settings', id: 'settings' },
+    { icon: User, label: 'Friends', id: 'friends' },
   ];
 
   return (
