@@ -61,7 +61,6 @@ export function Friends() {
     try {
       setIsLoading(true);
       const response = await fetch('/api/friends/requests');
-      console.log({ response });
       if (!response.ok) throw toast('Failed to load pending requests');
       const data = await response.json();
       setPendingRequests(Array.isArray(data) ? data : []);

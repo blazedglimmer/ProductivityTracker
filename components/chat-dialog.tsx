@@ -12,34 +12,17 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useSession } from 'next-auth/react';
-// import { format } from 'date-fns';
 import { Send } from 'lucide-react';
 import { toast } from 'sonner';
-
-interface Message {
-  id: string;
-  content: string;
-  senderId: string;
-  receiverId: string;
-  createdAt: string;
-}
-
-interface ChatDialogProps {
-  friend: {
-    id: string;
-    name: string;
-    username: string;
-  };
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { format } from 'date-fns';
+import { Message, ChatDialogProps } from '@/types';
 
 export function ChatDialog({ friend, isOpen, onClose }: ChatDialogProps) {
   const { data: session } = useSession();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadMessages();
@@ -49,18 +32,22 @@ export function ChatDialog({ friend, isOpen, onClose }: ChatDialogProps) {
   }, [friend.id]);
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+    if (messagesEndRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
   const loadMessages = async () => {
     try {
       const response = await fetch(`/api/messages/${friend.id}`);
+      if (!response.ok) {
+        toast.error('Failed to load messages');
+      }
       const data = await response.json();
       setMessages(data);
     } catch (error) {
       console.error('Failed to load messages:', error);
+      toast.error('Failed to load messages');
     }
   };
 
@@ -79,10 +66,12 @@ export function ChatDialog({ friend, isOpen, onClose }: ChatDialogProps) {
         }),
       });
 
-      if (!response.ok) toast.error('Failed to send message');
+      if (!response.ok) {
+        toast.error('Failed to send message');
+      }
 
       setNewMessage('');
-      await loadMessages();
+      await loadMessages(); // Reload messages after sending a new one
     } catch (error) {
       console.error('Failed to send message:', error);
       toast.error('Failed to send message');
@@ -110,7 +99,7 @@ export function ChatDialog({ friend, isOpen, onClose }: ChatDialogProps) {
           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="h-[400px] pr-4" ref={scrollAreaRef}>
+        <ScrollArea className="h-[400px] pr-4">
           <div className="space-y-4">
             {messages.map(message => {
               const isSender = message.senderId === session?.user?.id;
@@ -130,12 +119,13 @@ export function ChatDialog({ friend, isOpen, onClose }: ChatDialogProps) {
                   >
                     <p className="text-sm">{message.content}</p>
                     <p className="text-xs opacity-70 mt-1">
-                      {/* {format(new Date(message.createdAt), 'h:mm a')} */}
+                      {format(new Date(message.createdAt), 'h:mm a')}
                     </p>
                   </div>
                 </div>
               );
             })}
+            <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
 

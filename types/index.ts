@@ -27,3 +27,21 @@ export type TimeStats = {
     duration: number;
   }[];
 };
+
+export interface Message {
+  id: string;
+  content: string;
+  senderId: string;
+  receiverId: string;
+  createdAt: string;
+}
+
+export interface ChatDialogProps {
+  friend: {
+    id: string;
+    name: string;
+    username: string;
+  };
+  isOpen: boolean;
+  onClose: () => void;
+}
