@@ -31,7 +31,7 @@ export function SignUpForm() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to register');
+        throw toast(data.error || 'Failed to register');
       }
 
       toast.success('Registration successful');

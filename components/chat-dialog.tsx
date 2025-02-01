@@ -79,7 +79,7 @@ export function ChatDialog({ friend, isOpen, onClose }: ChatDialogProps) {
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to send message');
+      if (!response.ok) toast.error('Failed to send message');
 
       setNewMessage('');
       await loadMessages();

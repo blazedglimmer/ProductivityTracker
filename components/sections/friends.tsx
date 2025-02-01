@@ -46,7 +46,7 @@ export function Friends() {
     try {
       setIsLoading(true);
       const response = await fetch('/api/friends');
-      if (!response.ok) throw new Error('Failed to load friends');
+      if (!response.ok) toast('Failed to load friends');
       const data = await response.json();
       setFriends(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -62,7 +62,7 @@ export function Friends() {
       setIsLoading(true);
       const response = await fetch('/api/friends/requests');
       console.log({ response });
-      if (!response.ok) throw new Error('Failed to load pending requests');
+      if (!response.ok) throw toast('Failed to load pending requests');
       const data = await response.json();
       setPendingRequests(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -120,7 +120,7 @@ export function Friends() {
         body: JSON.stringify({ status: accept ? 'ACCEPTED' : 'REJECTED' }),
       });
 
-      if (!response.ok) throw new Error('Failed to handle friend request');
+      if (!response.ok) toast.error('Failed to handle friend request');
 
       toast.success(
         accept ? 'Friend request accepted' : 'Friend request rejected'
