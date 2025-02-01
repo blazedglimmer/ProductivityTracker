@@ -79,7 +79,7 @@ export function Friends() {
     try {
       setIsLoading(true);
       const response = await fetch(`/api/users/search?q=${searchQuery}`);
-      if (!response.ok) throw new Error('Failed to search users');
+      if (!response.ok) toast.error('Failed to search users');
       const data = await response.json();
       setSearchResults(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -99,7 +99,7 @@ export function Friends() {
         body: JSON.stringify({ addresseeId: userId }),
       });
 
-      if (!response.ok) throw new Error('Failed to send friend request');
+      if (!response.ok) throw toast.error('Failed to send friend request');
 
       toast.success('Friend request sent');
       setSearchResults(prev => prev.filter(user => user.id !== userId));

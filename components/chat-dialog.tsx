@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useSession } from 'next-auth/react';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import { Send } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -130,7 +130,7 @@ export function ChatDialog({ friend, isOpen, onClose }: ChatDialogProps) {
                   >
                     <p className="text-sm">{message.content}</p>
                     <p className="text-xs opacity-70 mt-1">
-                      {format(new Date(message.createdAt), 'h:mm a')}
+                      {/* {format(new Date(message.createdAt), 'h:mm a')} */}
                     </p>
                   </div>
                 </div>
