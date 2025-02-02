@@ -92,3 +92,13 @@ export async function updateTimeEntry(
     throw new Error('Failed to update time entry');
   }
 }
+
+export async function fetchFriendActivities(
+  friendId: string
+): Promise<TimeEntry[]> {
+  const response = await fetch(`/api/friends/activities/${friendId}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch friend activities');
+  }
+  return response.json();
+}

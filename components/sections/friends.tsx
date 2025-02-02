@@ -8,8 +8,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
-import { Search, UserPlus, MessageSquare, Clock } from 'lucide-react';
+import {
+  Search,
+  UserPlus,
+  MessageSquare,
+  Clock,
+  BarChart3,
+} from 'lucide-react';
 import { ChatDialog } from '@/components/chat-dialog';
+import { FriendActivityDialog } from '@/components/friend-activity-dialog';
 
 interface User {
   id: string;
@@ -34,6 +41,8 @@ export function Friends() {
   const [selectedFriend, setSelectedFriend] = useState<User | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFriendForActivity, setSelectedFriendForActivity] =
+    useState<User | null>(null);
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -186,6 +195,15 @@ export function Friends() {
                       >
                         <MessageSquare className="h-4 w-4" />
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setSelectedFriendForActivity(friend);
+                        }}
+                      >
+                        <BarChart3 className="h-4 w-4" />
+                      </Button>
                     </div>
                   ))
                 ) : (
@@ -325,6 +343,13 @@ export function Friends() {
             setShowChat(false);
             setSelectedFriend(null);
           }}
+        />
+      )}
+      {selectedFriendForActivity && (
+        <FriendActivityDialog
+          friend={selectedFriendForActivity}
+          isOpen={!!selectedFriendForActivity}
+          onClose={() => setSelectedFriendForActivity(null)}
         />
       )}
     </div>
