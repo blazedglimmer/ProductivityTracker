@@ -4,9 +4,10 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/actions/auth';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { friendId: string } }
+  _: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id: friendId } = await params;
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -19,11 +20,11 @@ export async function GET(
         OR: [
           {
             requesterId: session.user.id,
-            addresseeId: params.friendId,
+            addresseeId: friendId,
             status: 'ACCEPTED',
           },
           {
-            requesterId: params.friendId,
+            requesterId: friendId,
             addresseeId: session.user.id,
             status: 'ACCEPTED',
           },
@@ -41,7 +42,7 @@ export async function GET(
     // Get friend's time entries with categories
     const timeEntries = await prisma.timeEntry.findMany({
       where: {
-        userId: params.friendId,
+        userId: friendId,
       },
       include: {
         category: true,
