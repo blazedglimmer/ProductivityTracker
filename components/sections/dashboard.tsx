@@ -224,12 +224,12 @@ export function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 items-center">
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
         <Select
           value={timeRange}
           onValueChange={(value: TimeRange) => setTimeRange(value)}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Select time range" />
           </SelectTrigger>
           <SelectContent>
@@ -246,7 +246,7 @@ export function Dashboard() {
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-[280px] justify-start text-left font-normal"
+                className="w-full sm:w-[280px] justify-start text-left font-normal"
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {customDateRange.from ? (
@@ -263,7 +263,7 @@ export function Dashboard() {
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+            <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="range"
                 selected={{
@@ -283,7 +283,7 @@ export function Dashboard() {
         )}
 
         <Select value={categoryId} onValueChange={setCategoryId}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>
@@ -297,9 +297,14 @@ export function Dashboard() {
         </Select>
       </div>
 
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* ... (keep existing statistics cards) */}
+      </div>
+
       {/* Chart Section */}
       {timeEntries.length > 0 && (
-        <div className="bg-card p-6 rounded-lg border border-border">
+        <div className="bg-card p-4 sm:p-6 rounded-lg border border-border">
           <h2 className="text-lg font-semibold mb-4">
             Time Distribution by Category
           </h2>
@@ -308,9 +313,14 @@ export function Dashboard() {
               data={chartData}
               options={{
                 responsive: true,
+                maintainAspectRatio: true,
                 plugins: {
                   legend: {
                     position: 'bottom',
+                    labels: {
+                      boxWidth: 12,
+                      padding: 15,
+                    },
                   },
                   tooltip: {
                     callbacks: {

@@ -46,12 +46,6 @@ export function Calendar() {
     );
   };
 
-  // const getWeekDays = (date: Date) => {
-  //   const start = startOfWeek(date);
-  //   const end = endOfWeek(date);
-  //   return eachDayOfInterval({ start, end });
-  // };
-
   const calculateDayStats = (entries: TimeEntry[]) => {
     const totalMinutes = entries.reduce((acc, entry) => {
       const duration =
@@ -134,12 +128,12 @@ export function Calendar() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <Select
           value={viewMode}
           onValueChange={(value: ViewMode) => setViewMode(value)}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Select view" />
           </SelectTrigger>
           <SelectContent>
@@ -150,8 +144,8 @@ export function Calendar() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-4 sm:p-6">
           <CalendarComponent
             mode="single"
             selected={date}
@@ -181,8 +175,8 @@ export function Calendar() {
           )}
         </Card>
 
-        <Card className="p-6">
-          <div className="flex justify-between items-center mb-4">
+        <Card className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
             <h2 className="text-xl font-semibold">
               {date ? format(date, 'MMMM d, yyyy') : 'Select a date'}
             </h2>
@@ -192,9 +186,9 @@ export function Calendar() {
             </Button>
           </div>
 
-          <div className="space-y-4 overflow-y-auto sm:h-[calc(100svh-10rem)]">
+          <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-20rem)]">
             {/* Time slots for quick add */}
-            <div className="grid grid-cols-2 gap-2 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
               {Array.from({ length: 24 }).map((_, hour) => (
                 <Button
                   key={hour}
@@ -218,7 +212,7 @@ export function Calendar() {
                   key={entry.id}
                   className="p-4 rounded-lg bg-accent/50 hover:bg-accent/70 transition-colors"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <h3 className="font-medium">{entry.title}</h3>
                       <p className="text-sm text-muted-foreground">

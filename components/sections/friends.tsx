@@ -152,9 +152,9 @@ export function Friends() {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <Tabs defaultValue="friends">
-          <TabsList className="mb-4">
+      <Card className="p-4 sm:p-6">
+        <Tabs defaultValue="friends" className="w-full">
+          <TabsList className="mb-4 w-full justify-start overflow-x-auto">
             <TabsTrigger value="friends">Friends</TabsTrigger>
             <TabsTrigger value="search">Find Friends</TabsTrigger>
             <TabsTrigger value="requests">Friend Requests</TabsTrigger>
@@ -163,14 +163,16 @@ export function Friends() {
           <TabsContent value="friends">
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Your Friends</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {isLoading ? (
-                  <div className="col-span-2 text-center py-4">Loading...</div>
+                  <div className="col-span-full text-center py-4">
+                    Loading...
+                  </div>
                 ) : friends.length > 0 ? (
                   friends.map(friend => (
                     <div
                       key={friend.id}
-                      className="flex items-center justify-between p-4 rounded-lg bg-accent/50"
+                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg bg-accent/50 gap-4"
                     >
                       <div className="flex items-center gap-3">
                         <Avatar>
@@ -185,29 +187,31 @@ export function Friends() {
                           </p>
                         </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setSelectedFriend(friend);
-                          setShowChat(true);
-                        }}
-                      >
-                        <MessageSquare className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setSelectedFriendForActivity(friend);
-                        }}
-                      >
-                        <BarChart3 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedFriend(friend);
+                            setShowChat(true);
+                          }}
+                        >
+                          <MessageSquare className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedFriendForActivity(friend);
+                          }}
+                        >
+                          <BarChart3 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   ))
                 ) : (
-                  <p className="text-muted-foreground col-span-2 text-center py-4">
+                  <p className="text-muted-foreground col-span-full text-center py-4">
                     {`You haven't added any friends yet`}
                   </p>
                 )}
@@ -217,28 +221,35 @@ export function Friends() {
 
           <TabsContent value="search">
             <div className="space-y-4">
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Input
                   placeholder="Search users by username..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSearch()}
                   disabled={isLoading}
+                  className="w-full"
                 />
-                <Button onClick={handleSearch} disabled={isLoading}>
+                <Button
+                  onClick={handleSearch}
+                  disabled={isLoading}
+                  className="w-full sm:w-auto"
+                >
                   <Search className="h-4 w-4 mr-2" />
                   Search
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {isLoading ? (
-                  <div className="col-span-2 text-center py-4">Loading...</div>
+                  <div className="col-span-full text-center py-4">
+                    Loading...
+                  </div>
                 ) : searchResults.length > 0 ? (
                   searchResults.map(user => (
                     <div
                       key={user.id}
-                      className="flex items-center justify-between p-4 rounded-lg bg-accent/50"
+                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg bg-accent/50 gap-4"
                     >
                       <div className="flex items-center gap-3">
                         <Avatar>
@@ -258,13 +269,14 @@ export function Friends() {
                         size="icon"
                         onClick={() => sendFriendRequest(user.id)}
                         disabled={isLoading}
+                        className="w-full sm:w-auto"
                       >
                         <UserPlus className="h-4 w-4" />
                       </Button>
                     </div>
                   ))
                 ) : searchQuery ? (
-                  <p className="text-muted-foreground col-span-2 text-center py-4">
+                  <p className="text-muted-foreground col-span-full text-center py-4">
                     No users found
                   </p>
                 ) : null}
@@ -275,14 +287,16 @@ export function Friends() {
           <TabsContent value="requests">
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Pending Requests</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {isLoading ? (
-                  <div className="col-span-2 text-center py-4">Loading...</div>
+                  <div className="col-span-full text-center py-4">
+                    Loading...
+                  </div>
                 ) : pendingRequests.length > 0 ? (
                   pendingRequests.map(request => (
                     <div
                       key={request.id}
-                      className="flex items-center justify-between p-4 rounded-lg bg-accent/50"
+                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg bg-accent/50 gap-4"
                     >
                       <div className="flex items-center gap-3">
                         <Avatar>
@@ -305,11 +319,12 @@ export function Friends() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 w-full sm:w-auto">
                         <Button
                           size="sm"
                           onClick={() => handleFriendRequest(request.id, true)}
                           disabled={isLoading}
+                          className="flex-1 sm:flex-none"
                         >
                           Accept
                         </Button>
@@ -318,6 +333,7 @@ export function Friends() {
                           variant="outline"
                           onClick={() => handleFriendRequest(request.id, false)}
                           disabled={isLoading}
+                          className="flex-1 sm:flex-none"
                         >
                           Reject
                         </Button>
@@ -325,7 +341,7 @@ export function Friends() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-muted-foreground col-span-2 text-center py-4">
+                  <p className="text-muted-foreground col-span-full text-center py-4">
                     No pending friend requests
                   </p>
                 )}

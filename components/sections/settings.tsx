@@ -117,10 +117,10 @@ export function Settings() {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
+      <Card className="p-4 sm:p-6">
         <h2 className="text-xl font-semibold mb-6">Categories</h2>
         <form onSubmit={handleAddCategory} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="categoryName">Category Name</Label>
               <Input
@@ -140,16 +140,18 @@ export function Settings() {
               />
             </div>
           </div>
-          <Button type="submit">Add Category</Button>
+          <Button type="submit" className="w-full sm:w-auto">
+            Add Category
+          </Button>
         </form>
 
         <div className="mt-8 space-y-4">
           <h3 className="font-medium">Existing Categories</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {categories.map(category => (
               <div
                 key={category.id}
-                className="flex items-center justify-between p-4 rounded-lg bg-accent/50"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg bg-accent/50 gap-4"
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -158,7 +160,7 @@ export function Settings() {
                   />
                   <span>{category.name}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                   <Button
                     variant="ghost"
                     size="icon"

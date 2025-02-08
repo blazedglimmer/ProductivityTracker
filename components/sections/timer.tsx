@@ -64,20 +64,36 @@ export function Timer() {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
+      <Card className="p-4 sm:p-6">
         <div className="text-center">
-          <h2 className="text-4xl font-bold mb-8">{formatTime(seconds)}</h2>
-          <div className="flex justify-center gap-4">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">
+            {formatTime(seconds)}
+          </h2>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
             {!isRunning ? (
-              <Button onClick={handleStart} size="lg">
+              <Button
+                onClick={handleStart}
+                size="lg"
+                className="w-full sm:w-auto"
+              >
                 <Play className="mr-2 h-4 w-4" /> Start
               </Button>
             ) : (
-              <Button onClick={handlePause} size="lg" variant="secondary">
+              <Button
+                onClick={handlePause}
+                size="lg"
+                variant="secondary"
+                className="w-full sm:w-auto"
+              >
                 <Pause className="mr-2 h-4 w-4" /> Pause
               </Button>
             )}
-            <Button onClick={handleReset} size="lg" variant="outline">
+            <Button
+              onClick={handleReset}
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
               <Square className="mr-2 h-4 w-4" /> Reset
             </Button>
           </div>

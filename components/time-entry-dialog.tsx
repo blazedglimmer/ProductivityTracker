@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -216,7 +218,7 @@ export function TimeEntryDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Time Entry</DialogTitle>
         </DialogHeader>
@@ -242,7 +244,7 @@ export function TimeEntryDialog({
               }
               required
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
@@ -293,7 +295,7 @@ export function TimeEntryDialog({
             </Popover>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="startTime">Start Time</Label>
               <Input
@@ -327,8 +329,9 @@ export function TimeEntryDialog({
               onValueChange={value =>
                 setDescriptionTab(value as 'write' | 'preview')
               }
+              className="w-full"
             >
-              <TabsList className="mb-2">
+              <TabsList className="w-full justify-start">
                 <TabsTrigger value="write" className="flex items-center gap-2">
                   <Edit className="h-4 w-4" />
                   Write
@@ -346,7 +349,7 @@ export function TimeEntryDialog({
                   type="multiple"
                   value={activeMarkup}
                   onValueChange={setActiveMarkup}
-                  className="mb-2"
+                  className="mb-2 flex flex-wrap gap-1"
                 >
                   <ToggleGroupItem
                     value="bold"
