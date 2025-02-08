@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-'use client';
-
 import { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -11,6 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -18,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { createTimeEntry } from '@/lib/actions/time-entry';
 import { toast } from 'sonner';
 import { Calendar } from '@/components/ui/calendar';
@@ -26,7 +26,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
+import {
+  CalendarIcon,
+  Bold,
+  Italic,
+  Underline,
+  List,
+  Eye,
+  Edit,
+} from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
@@ -34,6 +42,7 @@ import { Category } from '@/types';
 import { fetchCategories } from '@/lib/api';
 import { useTimeEntries } from '@/hooks/use-time-entries';
 import { hasTimeOverlap } from '@/lib/utils';
+import { MarkdownPreview } from '@/components/markdown-preview';
 
 interface TimeEntryDialogProps {
   isOpen: boolean;
@@ -66,6 +75,10 @@ export function TimeEntryDialog({
 
   const { timeEntries } = useTimeEntries();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [activeMarkup, setActiveMarkup] = useState<string[]>([]);
+  const [descriptionTab, setDescriptionTab] = useState<'write' | 'preview'>(
+    'write'
+  );
 
   const resetForm = () => {
     setFormData({
@@ -80,6 +93,8 @@ export function TimeEntryDialog({
         ? format(new Date(initialTime.getTime() + 60 * 60 * 1000), 'HH:mm')
         : '',
     });
+    setActiveMarkup([]);
+    setDescriptionTab('write');
   };
 
   useEffect(() => {
@@ -102,7 +117,50 @@ export function TimeEntryDialog({
     if (!isOpen) {
       resetForm();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, initialDate, initialTime, initialEndTime]);
+
+  const handleMarkup = (value: string) => {
+    const textarea = document.getElementById(
+      'description'
+    ) as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = formData.description.substring(start, end);
+    let newText = formData.description;
+
+    switch (value) {
+      case 'bold':
+        newText =
+          newText.substring(0, start) +
+          `**${selectedText}**` +
+          newText.substring(end);
+        break;
+      case 'italic':
+        newText =
+          newText.substring(0, start) +
+          `_${selectedText}_` +
+          newText.substring(end);
+        break;
+      case 'underline':
+        newText =
+          newText.substring(0, start) +
+          `__${selectedText}__` +
+          newText.substring(end);
+        break;
+      case 'list':
+        const lines = selectedText.split('\n').map(line => `- ${line}`);
+        newText =
+          newText.substring(0, start) +
+          lines.join('\n') +
+          newText.substring(end);
+        break;
+    }
+
+    setFormData(prev => ({ ...prev, description: newText }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,7 +194,7 @@ export function TimeEntryDialog({
     const formDataToSend = new FormData();
     formDataToSend.append('title', formData.title);
     formDataToSend.append('categoryId', formData.categoryId);
-    formDataToSend.append('description', formData.description || '');
+    formDataToSend.append('description', formData.description);
     formDataToSend.append('startTime', start.toISOString());
     formDataToSend.append('endTime', end.toISOString());
 
@@ -158,7 +216,7 @@ export function TimeEntryDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Add Time Entry</DialogTitle>
         </DialogHeader>
@@ -263,14 +321,86 @@ export function TimeEntryDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
-            <Input
-              id="description"
-              value={formData.description}
-              onChange={e =>
-                setFormData(prev => ({ ...prev, description: e.target.value }))
+            <Label htmlFor="description">Description</Label>
+            <Tabs
+              value={descriptionTab}
+              onValueChange={value =>
+                setDescriptionTab(value as 'write' | 'preview')
               }
-            />
+            >
+              <TabsList className="mb-2">
+                <TabsTrigger value="write" className="flex items-center gap-2">
+                  <Edit className="h-4 w-4" />
+                  Write
+                </TabsTrigger>
+                <TabsTrigger
+                  value="preview"
+                  className="flex items-center gap-2"
+                >
+                  <Eye className="h-4 w-4" />
+                  Preview
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="write" className="space-y-2">
+                <ToggleGroup
+                  type="multiple"
+                  value={activeMarkup}
+                  onValueChange={setActiveMarkup}
+                  className="mb-2"
+                >
+                  <ToggleGroupItem
+                    value="bold"
+                    onClick={() => handleMarkup('bold')}
+                  >
+                    <Bold className="h-4 w-4" />
+                  </ToggleGroupItem>
+                  <ToggleGroupItem
+                    value="italic"
+                    onClick={() => handleMarkup('italic')}
+                  >
+                    <Italic className="h-4 w-4" />
+                  </ToggleGroupItem>
+                  <ToggleGroupItem
+                    value="underline"
+                    onClick={() => handleMarkup('underline')}
+                  >
+                    <Underline className="h-4 w-4" />
+                  </ToggleGroupItem>
+                  <ToggleGroupItem
+                    value="list"
+                    onClick={() => handleMarkup('list')}
+                  >
+                    <List className="h-4 w-4" />
+                  </ToggleGroupItem>
+                </ToggleGroup>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={e =>
+                    setFormData(prev => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
+                  className="min-h-[200px] font-mono"
+                  placeholder="Use markdown for formatting:
+**bold**
+_italic_
+__underlined__
+- list item"
+                />
+              </TabsContent>
+              <TabsContent
+                value="preview"
+                className="min-h-[200px] border rounded-md p-4"
+              >
+                {formData.description ? (
+                  <MarkdownPreview content={formData.description} />
+                ) : (
+                  <p className="text-muted-foreground">Nothing to preview</p>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
 
           <Button type="submit" className="w-full">

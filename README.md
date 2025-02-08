@@ -5,7 +5,7 @@ TODOS:
 3. User can be friend with other users. With this user should be able to track his friends progress also, once they are friend, so in this we need to give search friends functionality also.
 4. We should allow these friends to chat with each other. Later we can make it real time with sockets or graphql subscriptions, but for now with just APIs.
 5. In time entry, we should allow user to write description with TEXT MARKUP so he can write descriptive elaboration of what he has done in those times.
-6. We should allow user to maintain there TODO list and share with their friends. Goals can be set for daily, what things need to be done, note sharing web app
+6. We should allow user to maintain there TODO list/NOTES and share with their friends. Goals can be set for daily, what things need to be done, note sharing web app
 
 7. In reports section, we should allow user to filter.. daily activity, weekly activity, monthly activity, yearly activity (if we can show it properly on UI with proper UI, UX and functionality)
 8. Each section, should be visible on /section url path, rather than just on root / path
