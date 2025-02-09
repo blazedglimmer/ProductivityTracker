@@ -1,115 +1,82 @@
-'use client';
+'use server';
 
-import { useState } from 'react';
-import {
-  Timer,
-  BarChart3,
-  Calendar,
-  Settings,
-  PieChart,
-  User,
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-import { Timer as TimerSection } from '@/components/sections/timer';
-import { Calendar as CalendarSection } from '@/components/sections/calendar';
-import { Reports } from '@/components/sections/reports';
-import { Dashboard } from '@/components/sections/dashboard';
-import { Settings as SettingsSection } from '@/components/sections/settings';
-import { Friends } from '@/components/sections/friends';
+import Image from 'next/image';
 
-export default function Home() {
-  const [activeSection, setActiveSection] = useState('timer');
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const variants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
-
-  const renderSection = () => {
-    switch (activeSection) {
-      case 'timer':
-        return <TimerSection />;
-      case 'calendar':
-        return <CalendarSection />;
-      case 'reports':
-        return <Reports />;
-      case 'dashboard':
-        return <Dashboard />;
-      case 'settings':
-        return <SettingsSection />;
-      case 'friends':
-        return <Friends />;
-      default:
-        return <TimerSection />;
-    }
-  };
-
-  const navItems = [
-    { icon: Timer, label: 'Timer', id: 'timer' },
-    { icon: Calendar, label: 'Calendar', id: 'calendar' },
-    { icon: BarChart3, label: 'Reports', id: 'reports' },
-    { icon: PieChart, label: 'Dashboard', id: 'dashboard' },
-    { icon: Settings, label: 'Settings', id: 'settings' },
-    { icon: User, label: 'Friends', id: 'friends' },
-  ];
-
+export default async function Home() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border p-4">
-        <motion.div
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          className="flex items-center gap-2 mb-8"
-        >
-          <Timer className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">TimeTracker</h1>
-        </motion.div>
-
-        <motion.nav
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="space-y-2"
-        >
-          {navItems.map(item => (
-            <motion.div
-              key={item.id}
-              variants={variants}
-              whileHover={{ x: 5 }}
-              className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer ${
-                activeSection === item.id
-                  ? 'bg-primary text-primary-foreground'
-                  : 'hover:bg-accent'
-              }`}
-              onClick={() => setActiveSection(item.id)}
-            >
-              <item.icon className="h-5 w-5" />
-              <span className="text-sm font-medium">{item.label}</span>
-            </motion.div>
-          ))}
-        </motion.nav>
+      <div className="container mx-auto py-12">
+        <h1 className="text-4xl font-bold mb-6">Welcome to Product Tracker</h1>
+        <p className="text-lg mb-4">
+          Track your products efficiently and effortlessly.
+        </p>
+        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Get Started
+        </button>
       </div>
-
-      {/* Main Content */}
-      <div className="ml-64 p-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-5xl mx-auto"
-        >
-          {renderSection()}
-        </motion.div>
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="flex flex-col items-center">
+          <Image
+            src="/images/feature1.png"
+            alt="Feature 1"
+            className="w-32 h-32 mb-4"
+            width={128}
+            height={128}
+          />
+          <h2 className="text-2xl font-semibold mb-2">Feature 1</h2>
+          <p className="text-center">
+            Description of feature 1 that highlights its benefits and usage.
+          </p>
+        </div>
+        <div className="flex flex-col items-center">
+          <Image
+            src="/images/feature2.png"
+            alt="Feature 2"
+            className="w-32 h-32 mb-4"
+            width={128}
+            height={128}
+          />
+          <h2 className="text-2xl font-semibold mb-2">Feature 2</h2>
+          <p className="text-center">
+            Description of feature 2 that highlights its benefits and usage.
+          </p>
+        </div>
+        <div className="flex flex-col items-center">
+          <Image
+            src="/images/feature3.png"
+            alt="Feature 3"
+            className="w-32 h-32 mb-4"
+            width={128}
+            height={128}
+          />
+          <h2 className="text-2xl font-semibold mb-2">Feature 3</h2>
+          <p className="text-center">
+            Description of feature 3 that highlights its benefits and usage.
+          </p>
+        </div>
+        <div className="flex flex-col items-center">
+          <Image
+            src="/images/feature4.png"
+            alt="Feature 4"
+            className="w-32 h-32 mb-4"
+            width={128}
+            height={128}
+          />
+          <h2 className="text-2xl font-semibold mb-2">Feature 4</h2>
+          <p className="text-center">
+            Description of feature 4 that highlights its benefits and usage.
+          </p>
+        </div>
+      </div>
+      <div className="mt-12 text-center">
+        <h2 className="text-3xl font-bold mb-4">Why Choose Us?</h2>
+        <p className="text-lg mb-6">
+          We provide the best tools to track your products with ease and
+          efficiency.
+        </p>
+        <button className="px-6 py-3 bg-green-500 text-white rounded hover:bg-green-600">
+          Learn More
+        </button>
       </div>
     </div>
   );
