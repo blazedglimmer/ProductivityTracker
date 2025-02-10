@@ -10,11 +10,10 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-// import Link from 'next/link';
+import { MotionDiv, MotionNav } from '@/motion-wrappers';
 
 const container = {
   hidden: { opacity: 0 },
@@ -42,10 +41,15 @@ export const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const handleNavigation = (path: string) => {
     router.push(path);
     setIsMobileMenuOpen(false);
   };
+
+  if (pathname === '/login' || pathname === '/signup' || pathname === '/')
+    return null;
+
   return (
     <section>
       {/* Mobile Menu Button */}
@@ -64,23 +68,24 @@ export const Sidebar = () => {
       </div>
       {/* Sidebar - Desktop */}
       <div className="hidden lg:block fixed left-0 top-0 h-full w-64 bg-card border-r border-border p-4">
-        <motion.div
+        <MotionDiv
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          className="flex items-center gap-2 mb-8"
+          className="flex items-center gap-2 mb-8 cursor-pointer"
+          onClick={() => router.push('/')}
         >
           <Timer className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">TimeTracker</h1>
-        </motion.div>
+          <h1 className="text-xl font-bold">FlowSync</h1>
+        </MotionDiv>
 
-        <motion.nav
+        <MotionNav
           variants={container}
           initial="hidden"
           animate="show"
           className="space-y-2"
         >
           {navItems.map(item => (
-            <motion.div
+            <MotionDiv
               key={item.path}
               variants={variants}
               whileHover={{ x: 5 }}
@@ -93,9 +98,9 @@ export const Sidebar = () => {
             >
               <item.icon className="h-5 w-5" />
               <span className="text-sm font-medium">{item.label}</span>
-            </motion.div>
+            </MotionDiv>
           ))}
-        </motion.nav>
+        </MotionNav>
       </div>
 
       {/* Mobile Menu - Slide Over */}
@@ -109,7 +114,7 @@ export const Sidebar = () => {
           <div className="mt-12">
             <div className="flex items-center gap-2 mb-8">
               <Timer className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-bold">TimeTracker</h1>
+              <h1 className="text-xl font-bold">FlowSync</h1>
             </div>
 
             <nav className="space-y-2">
