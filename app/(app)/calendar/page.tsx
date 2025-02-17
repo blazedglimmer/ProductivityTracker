@@ -1,5 +1,5 @@
 import { Calendar } from '@/components/sections/calendar';
 
-export default function CalendarPage() {
+export default async function CalendarPage() {
   return <Calendar />;
 }
