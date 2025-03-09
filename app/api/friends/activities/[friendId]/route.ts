@@ -5,9 +5,9 @@ import { authOptions } from '@/lib/actions/auth';
 
 export async function GET(
   _: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ friendId: string }> }
 ) {
-  const { id: friendId } = await params;
+  const { friendId } = await params;
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
