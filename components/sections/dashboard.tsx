@@ -23,48 +23,26 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { getFilteredTimeEntries } from '@/lib/actions/time-entries';
 import { formatDuration } from '@/lib/utils';
+import {
+  TimeRange,
+  CustomDateRange,
+  Category,
+  ChartData,
+  TimeEntry,
+} from '@/types';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-type TimeRange = 'today' | 'week' | 'month' | 'year' | 'custom';
-
-interface TimeEntry {
-  id: string;
-  title: string;
-  description: string | null;
-  startTime: Date;
-  endTime: Date;
-  category: Category;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  color: string;
-}
-
-interface ChartData {
-  labels: string[];
-  datasets: {
-    data: number[];
-    backgroundColor: string[];
-    borderColor: string[];
-    borderWidth: number;
-  }[];
-}
 
 export function Dashboard({ categories }: { categories: Category[] }) {
   const [timeRange, setTimeRange] = useState<TimeRange>('today');
   const [categoryId, setCategoryId] = useState<string>('all');
-  const [customDateRange, setCustomDateRange] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({
+  const [customDateRange, setCustomDateRange] = useState<CustomDateRange>({
     from: undefined,
     to: undefined,
   });
 
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  // console.log({ timeEntries });
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [
@@ -161,7 +139,7 @@ export function Dashboard({ categories }: { categories: Category[] }) {
     async (reset = false) => {
       const currentPage = reset ? 1 : page;
       const { startDate, endDate } = getDateRange();
-
+      // console.log({ startDate, endDate });
       if (!startDate || !endDate) return;
 
       try {

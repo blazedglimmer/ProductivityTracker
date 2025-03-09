@@ -48,6 +48,7 @@ import {
   getCategories,
 } from '@/lib/actions/time-entries';
 import { formatDuration } from '@/lib/utils';
+import { TimeRange, Category, Statistics, TimeEntry } from '@/types';
 
 ChartJS.register(
   CategoryScale,
@@ -57,34 +58,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-type TimeRange = 'today' | 'week' | 'month' | 'year' | 'custom';
-
-interface TimeEntry {
-  id: string;
-  title: string;
-  description: string | null;
-  startTime: Date;
-  endTime: Date;
-  category: Category;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  color: string;
-}
-
-interface Statistics {
-  totalHours: number;
-  averageHoursPerDay: number;
-  mostProductiveDay: string;
-  topCategory: {
-    name: string;
-    hours: number;
-    color: string;
-  } | null;
-}
 
 export function Reports() {
   const [timeRange, setTimeRange] = useState<TimeRange>('today');

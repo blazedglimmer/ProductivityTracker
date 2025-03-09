@@ -35,18 +35,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn, formatDuration } from '@/lib/utils';
-
-interface FriendActivityDialogProps {
-  friend: {
-    id: string;
-    name: string;
-    username: string;
-  };
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-type TimeRange = 'today' | 'week' | 'month' | 'year' | 'custom';
+import { TimeRange, FriendActivityDialogProps } from '@/types';
 
 export function FriendActivityDialog({
   friend,

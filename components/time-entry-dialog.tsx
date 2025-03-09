@@ -40,19 +40,11 @@ import {
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
-import { Category } from '@/types';
+import { Category, TimeEntryDialogProps } from '@/types';
 import { fetchCategories } from '@/lib/api';
 import { useTimeEntries } from '@/hooks/use-time-entries';
 import { hasTimeOverlap } from '@/lib/utils';
 import { MarkdownPreview } from '@/components/markdown-preview';
-
-interface TimeEntryDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  initialDate?: Date;
-  initialTime?: Date | null;
-  initialEndTime?: Date | null;
-}
 
 export function TimeEntryDialog({
   isOpen,

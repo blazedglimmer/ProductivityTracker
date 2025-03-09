@@ -14,15 +14,13 @@ import {
 import { fetchTimeEntries, deleteTimeEntry, updateTimeEntry } from '@/lib/api';
 import { format } from 'date-fns';
 import { useTimeEntriesCategories } from '@/hooks/use-time-entries-categories';
-import { TimeEntry } from '@/types';
+import { TimeEntry, ViewMode } from '@/types';
 import { toast } from 'sonner';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 import { EditTimeEntryDialog } from '@/components/edit-time-entry-dialog';
 import { DeleteTimeEntryDialog } from '@/components/delete-time-entry-dialog';
 import { TimeEntryDialog } from '@/components/time-entry-dialog';
 import { formatDuration, hasTimeOverlap } from '@/lib/utils';
-
-type ViewMode = 'day' | 'week' | 'month';
 
 export function Calendar() {
   const [date, setDate] = useState<Date | undefined>(new Date());
