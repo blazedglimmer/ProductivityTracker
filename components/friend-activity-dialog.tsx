@@ -34,7 +34,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn, formatDuration } from '@/lib/utils';
 
 interface FriendActivityDialogProps {
   friend: {
@@ -211,7 +211,7 @@ export function FriendActivityDialog({
 
         <div className="mb-4 p-4 bg-accent/50 rounded-lg">
           <p className="text-lg font-semibold">
-            Total Hours: {totalHours.toFixed(1)}h
+            Total Hours: {formatDuration(totalHours)}
           </p>
         </div>
 

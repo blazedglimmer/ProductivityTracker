@@ -47,6 +47,7 @@ import {
   getFilteredTimeEntries,
   getCategories,
 } from '@/lib/actions/time-entries';
+import { formatDuration } from '@/lib/utils';
 
 ChartJS.register(
   CategoryScale,
@@ -365,7 +366,7 @@ export function Reports() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {statistics.totalHours.toFixed(1)}h
+              {formatDuration(statistics.totalHours)}
             </p>
           </CardContent>
         </Card>
@@ -377,7 +378,7 @@ export function Reports() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {statistics.averageHoursPerDay.toFixed(1)}h
+              {formatDuration(statistics.averageHoursPerDay)}
             </p>
           </CardContent>
         </Card>
@@ -411,7 +412,7 @@ export function Reports() {
                   {statistics.topCategory.name}
                 </div>
                 <p className="text-2xl font-bold">
-                  {statistics.topCategory.hours.toFixed(1)}h
+                  {formatDuration(statistics.topCategory.hours)}
                 </p>
               </div>
             ) : (
@@ -434,10 +435,6 @@ export function Reports() {
           </TableHeader>
           <TableBody>
             {timeEntries.map((entry, index) => {
-              const duration =
-                (new Date(entry.endTime).getTime() -
-                  new Date(entry.startTime).getTime()) /
-                (1000 * 60 * 60);
               return (
                 <TableRow key={`${entry.id}-${index}`}>
                   <TableCell>
@@ -461,7 +458,13 @@ export function Reports() {
                       {entry.category.name}
                     </div>
                   </TableCell>
-                  <TableCell>{duration.toFixed(1)}h</TableCell>
+                  <TableCell>
+                    {formatDuration(
+                      (new Date(entry.endTime).getTime() -
+                        new Date(entry.startTime).getTime()) /
+                        (1000 * 60 * 60)
+                    )}
+                  </TableCell>
                 </TableRow>
               );
             })}

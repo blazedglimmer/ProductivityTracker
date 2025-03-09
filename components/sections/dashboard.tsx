@@ -25,6 +25,7 @@ import {
   getFilteredTimeEntries,
   getCategories,
 } from '@/lib/actions/time-entries';
+import { formatDuration } from '@/lib/utils';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -326,7 +327,7 @@ export function Dashboard() {
                     callbacks: {
                       label: function (context) {
                         const hours = context.raw as number;
-                        return `${hours.toFixed(1)} hours`;
+                        return formatDuration(hours);
                       },
                     },
                   },

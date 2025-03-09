@@ -20,7 +20,7 @@ import { Pencil, Trash2, Plus } from 'lucide-react';
 import { EditTimeEntryDialog } from '@/components/edit-time-entry-dialog';
 import { DeleteTimeEntryDialog } from '@/components/delete-time-entry-dialog';
 import { TimeEntryDialog } from '@/components/time-entry-dialog';
-import { hasTimeOverlap } from '@/lib/utils';
+import { formatDuration, hasTimeOverlap } from '@/lib/utils';
 
 type ViewMode = 'day' | 'week' | 'month';
 
@@ -59,13 +59,14 @@ export function Calendar() {
         const duration =
           new Date(entry.endTime).getTime() -
           new Date(entry.startTime).getTime();
-        acc[category.name] = (acc[category.name] || 0) + duration / (1000 * 60);
+        acc[category.name] =
+          (acc[category.name] || 0) + duration / (1000 * 60 * 60);
       }
       return acc;
     }, {} as Record<string, number>);
 
     return {
-      totalHours: Math.round((totalMinutes / 60) * 10) / 10,
+      totalHours: totalMinutes / 60,
       categoryStats,
     };
   };
@@ -157,16 +158,18 @@ export function Calendar() {
           {date && (
             <div className="mt-6 p-4 bg-accent/50 rounded-lg">
               <h3 className="font-semibold mb-2">Daily Statistics</h3>
-              <p className="text-sm">Total Hours: {dayStats.totalHours}h</p>
+              <p className="text-sm">
+                Total Hours: {formatDuration(dayStats.totalHours)}
+              </p>
               <div className="mt-2">
                 {Object.entries(dayStats.categoryStats).map(
-                  ([category, minutes]) => (
+                  ([category, hours]) => (
                     <div
                       key={category}
                       className="text-sm flex justify-between"
                     >
                       <span>{category}:</span>
-                      <span>{Math.round((minutes / 60) * 10) / 10}h</span>
+                      <span>{formatDuration(hours)}</span>
                     </div>
                   )
                 )}
