@@ -21,10 +21,7 @@ import {
 import { useInView } from 'react-intersection-observer';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import {
-  getFilteredTimeEntries,
-  getCategories,
-} from '@/lib/actions/time-entries';
+import { getFilteredTimeEntries } from '@/lib/actions/time-entries';
 import { formatDuration } from '@/lib/utils';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -56,7 +53,7 @@ interface ChartData {
   }[];
 }
 
-export function Dashboard() {
+export function Dashboard({ categories }: { categories: Category[] }) {
   const [timeRange, setTimeRange] = useState<TimeRange>('today');
   const [categoryId, setCategoryId] = useState<string>('all');
   const [customDateRange, setCustomDateRange] = useState<{
@@ -66,7 +63,7 @@ export function Dashboard() {
     from: undefined,
     to: undefined,
   });
-  const [categories, setCategories] = useState<Category[]>([]);
+
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
@@ -194,18 +191,6 @@ export function Dashboard() {
     },
     [page, timeRange, categoryId, customDateRange, timeEntries]
   );
-
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const result = await getCategories();
-        setCategories(result);
-      } catch (error) {
-        console.error('Failed to load categories:', error);
-      }
-    };
-    loadCategories();
-  }, []);
 
   useEffect(() => {
     setPage(1);
