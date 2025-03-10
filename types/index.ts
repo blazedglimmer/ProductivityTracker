@@ -93,3 +93,17 @@ export interface FriendActivityDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+export interface User {
+  id: string;
+  username: string;
+  name: string;
+}
+
+export interface FriendRequest {
+  id: string;
+  requester: User;
+  addressee: User;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  createdAt: string;
+}

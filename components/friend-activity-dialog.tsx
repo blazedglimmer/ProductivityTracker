@@ -35,7 +35,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn, formatDuration } from '@/lib/utils';
-import { TimeRange, FriendActivityDialogProps } from '@/types';
+import { TimeRange, FriendActivityDialogProps, CustomDateRange } from '@/types';
 
 export function FriendActivityDialog({
   friend,
@@ -45,10 +45,7 @@ export function FriendActivityDialog({
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [timeRange, setTimeRange] = useState<TimeRange>('today');
-  const [customDateRange, setCustomDateRange] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({
+  const [customDateRange, setCustomDateRange] = useState<CustomDateRange>({
     from: undefined,
     to: undefined,
   });

@@ -17,20 +17,7 @@ import {
 } from 'lucide-react';
 import { ChatDialog } from '@/components/chat-dialog';
 import { FriendActivityDialog } from '@/components/friend-activity-dialog';
-
-interface User {
-  id: string;
-  username: string;
-  name: string;
-}
-
-interface FriendRequest {
-  id: string;
-  requester: User;
-  addressee: User;
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
-  createdAt: string;
-}
+import { User, FriendRequest } from '@/types';
 
 export function Friends() {
   const { data: session } = useSession();

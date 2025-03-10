@@ -48,7 +48,13 @@ import {
   getCategories,
 } from '@/lib/actions/time-entries';
 import { formatDuration } from '@/lib/utils';
-import { TimeRange, Category, Statistics, TimeEntry } from '@/types';
+import {
+  TimeRange,
+  Category,
+  Statistics,
+  TimeEntry,
+  CustomDateRange,
+} from '@/types';
 
 ChartJS.register(
   CategoryScale,
@@ -62,10 +68,7 @@ ChartJS.register(
 export function Reports() {
   const [timeRange, setTimeRange] = useState<TimeRange>('today');
   const [categoryId, setCategoryId] = useState<string>('all');
-  const [customDateRange, setCustomDateRange] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({
+  const [customDateRange, setCustomDateRange] = useState<CustomDateRange>({
     from: undefined,
     to: undefined,
   });
