@@ -40,7 +40,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <ModeToggle className="absolute top-2 right-2 rounded-full" />
+            <ModeToggle className="absolute top-2 right-2 rounded-full z-10" />
             <Sidebar />
             {children}
             <Toaster />
