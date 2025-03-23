@@ -18,6 +18,8 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
+import Link from 'next/link';
+
 // Menu items.
 const items = [
   {
@@ -57,16 +59,18 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <Link className="font-bold hidden sm:inline-block" href="/">
+            <SidebarGroupLabel>FlowSync</SidebarGroupLabel>
+          </Link>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
