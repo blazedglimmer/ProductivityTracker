@@ -4,8 +4,11 @@ import { Toaster } from 'sonner';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Providers } from '@/components/providers';
 import { TailwindIndicator } from '@/components/tailwind-indicator';
-import { Sidebar } from '@/components/side-bar/side-bar';
-import { Header } from '@/components/header';
+// import { Sidebar } from '@/components/side-bar/side-bar';
+// import { Header } from '@/components/header';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
+import { ModeToggle } from '@/components/mode-toggle';
 import './globals.css';
 
 const geistSans = Geist({
@@ -35,18 +38,23 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Header />
-            <Sidebar />
-            {children}
-            <Toaster />
-          </ThemeProvider>
-          <TailwindIndicator />
+          <SidebarProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <AppSidebar />
+              <ModeToggle className="fixed top-4 right-4" />
+              {/* <Header /> */}
+              {/* <Sidebar /> */}
+              <SidebarTrigger />
+              {children}
+              <Toaster />
+            </ThemeProvider>
+            <TailwindIndicator />
+          </SidebarProvider>
         </Providers>
       </body>
     </html>
