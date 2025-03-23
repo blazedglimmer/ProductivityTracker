@@ -54,30 +54,28 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
-  return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <Link className="font-bold hidden sm:inline-block" href="/">
-            <SidebarGroupLabel>FlowSync</SidebarGroupLabel>
-          </Link>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map(item => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
-  );
-}
+export const AppSidebar = () => (
+  <Sidebar>
+    <SidebarContent>
+      <SidebarGroup>
+        <Link className="font-bold hidden sm:inline-block" href="/">
+          <SidebarGroupLabel>FlowSync</SidebarGroupLabel>
+        </Link>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {items.map(item => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </SidebarContent>
+  </Sidebar>
+);
