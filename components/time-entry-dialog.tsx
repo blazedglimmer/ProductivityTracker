@@ -210,7 +210,7 @@ export function TimeEntryDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto">
+      <DialogContent className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] sm:max-w-[600px] w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Time Entry</DialogTitle>
         </DialogHeader>
@@ -274,8 +274,14 @@ export function TimeEntryDialog({
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent
+                className="w-auto p-0 !fixed pointer-events-auto"
+                align="start"
+                side="bottom"
+                forceMount
+              >
                 <Calendar
+                  className="pointer-events-auto relative z-10"
                   mode="single"
                   selected={formData.date}
                   onSelect={date =>
