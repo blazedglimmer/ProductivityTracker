@@ -63,7 +63,9 @@ export function Timer() {
   };
 
   return (
-    <div className="space-y-6">
+    <div
+      className={`space-y-6 h-[calc(100svh-66px)] flex items-center justify-center`}
+    >
       <Card className="p-4 sm:p-6">
         <div className="text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">
