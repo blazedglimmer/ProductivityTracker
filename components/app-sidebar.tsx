@@ -92,7 +92,6 @@ const menuItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  console.log('Session:', Array.isArray([session]));
   const { theme: isDarkMode } = useTheme();
 
   return (
