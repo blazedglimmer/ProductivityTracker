@@ -179,6 +179,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             type="tel"
             defaultValue={profile.phone || ''}
             placeholder="Enter your phone number"
+            maxLength={12}
           />
         </div>
 

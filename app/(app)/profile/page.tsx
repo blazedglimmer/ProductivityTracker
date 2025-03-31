@@ -10,11 +10,7 @@ export default async function ProfilePage() {
       redirect('/signin');
     }
 
-    return (
-      <div className="container max-w-2xl py-8">
-        <ProfileForm profile={profile} />
-      </div>
-    );
+    return <ProfileForm profile={profile} />;
   } catch (error) {
     console.error('Failed to fetch profile:', error);
     redirect('/signin');
