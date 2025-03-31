@@ -9,12 +9,15 @@ export function AppLayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex">
       <main
-        className="flex-1 transition-all duration-300 flex justify-center"
-        style={{
-          marginLeft: isSidebarOpen ? '64px' : '0',
-        }}
+        className={`flex-1 transition-all duration-300 flex justify-center ${
+          isSidebarOpen ? 'w-[calc(100vw-274px)]' : 'w-[calc(100vw-28px)]'
+        }
+        }`}
+        // style={{
+        //   width: isSidebarOpen ? 'calc(100vw - 274px)' : 'calc(100vw - 28px)',
+        // }}
       >
-        <div className="w-full max-w-5xl px-4 py-8">
+        <div className="w-full max-w-5xl px-4 py-8  border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700 rounded-lg shadow-md ">
           <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
