@@ -49,7 +49,7 @@ export default function RootLayout({
               <ModeToggle className="fixed top-4 right-4" />
               {/* <Header /> */}
               {/* <Sidebar /> */}
-              <SidebarTrigger className="" />
+              <SidebarTrigger className="z-20" />
               {children}
               <Toaster />
             </ThemeProvider>

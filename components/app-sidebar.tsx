@@ -94,6 +94,10 @@ export function AppSidebar() {
   const { data: session } = useSession();
   const { theme: isDarkMode } = useTheme();
 
+  if (!session) {
+    return null;
+  }
+
   return (
     <Sidebar>
       <SidebarHeader className="h-16 flex items-center justify-center border-b border-sidebar-border">
