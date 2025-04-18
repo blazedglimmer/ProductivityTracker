@@ -25,6 +25,20 @@ export const metadata: Metadata = {
   title: 'FlowSync - Time Tracking Made Simple',
   description:
     'Track your time efficiently and boost your productivity with FlowSync.',
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FlowSync - Time Tracking Made Simple',
+    description:
+      'Track your time efficiently and boost your productivity with FlowSync.',
+    creator: '@flow_sync',
+    images: ['https://example.com/image.jpg'],
+  },
+  openGraph: {
+    title: 'FlowSync - Time Tracking Made Simple',
+    description:
+      'Track your time efficiently and boost your productivity with FlowSync.',
+    url: 'https://example.com',
+  },
 };
 
 export default function RootLayout({
