@@ -12,6 +12,7 @@ import {
   LogOut,
   Moon,
   Sun,
+  Utensils,
 } from 'lucide-react';
 
 import {
@@ -69,6 +70,16 @@ const menuItems = [
         title: 'Dashboard',
         url: '/dashboard',
         icon: PieChart,
+      },
+    ],
+  },
+  {
+    category: 'Health',
+    items: [
+      {
+        title: 'Nutrition',
+        url: '/nutrition',
+        icon: Utensils,
       },
     ],
   },

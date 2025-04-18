@@ -29,6 +29,10 @@ model User {
     sentMessages     Message[] @relation("sender")
     receivedMessages Message[] @relation("receiver")
 
+    // Diet tracking
+    foods Food[]
+    meals Meal[]
+
     @@index([username])
 }
 
@@ -87,6 +91,52 @@ model Message {
     updatedAt  DateTime @updatedAt
 
     @@index([senderId, receiverId])
+}
+
+model Food {
+    id          String     @id @default(cuid())
+    name        String
+    calories    Int
+    protein     Float
+    carbs       Float
+    fats        Float
+    fiber       Float
+    servingSize Float
+    servingUnit String
+    userId      String
+    user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    mealFoods   MealFood[]
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+
+    @@index([userId])
+}
+
+model Meal {
+    id        String     @id @default(cuid())
+    name      String
+    date      DateTime
+    userId    String
+    user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    mealFoods MealFood[]
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+
+    @@index([userId])
+}
+
+model MealFood {
+    id        String   @id @default(cuid())
+    mealId    String
+    foodId    String
+    servings  Float
+    meal      Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
+    food      Food     @relation(fields: [foodId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([mealId])
+    @@index([foodId])
 }
 
 enum FriendshipStatus {
