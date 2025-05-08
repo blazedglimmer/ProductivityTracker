@@ -9,17 +9,20 @@ generator client {
 }
 
 model User {
-    id          String      @id @default(cuid())
-    name        String?
-    username    String?     @unique
-    email       String      @unique
-    password    String
-    phone       String?
-    image       String?
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime    @updatedAt
-    categories  Category[]
-    timeEntries TimeEntry[]
+    id            String         @id @default(cuid())
+    name          String?
+    username      String?        @unique
+    email         String         @unique
+    password      String
+    phone         String?
+    image         String?
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @default(now()) @updatedAt
+    categories    Category[]
+    timeEntries   TimeEntry[]
+    todos         Todo[]
+    collaborators Collaborator[]
+    TodoHistory   TodoHistory[]
 
     // Friend system
     sentFriendRequests     Friendship[] @relation("requester")
@@ -34,6 +37,64 @@ model User {
     meals Meal[]
 
     @@index([username])
+}
+
+model Todo {
+    id             String         @id @default(cuid())
+    title          String
+    description    String
+    done           Boolean        @default(false)
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @default(now()) @updatedAt
+    user           User           @relation(fields: [userId], references: [id])
+    userId         String
+    todoColor      String         @default("")
+    images         Image[] // Relation to the Image model
+    collaborators  Collaborator[]
+    lastModifiedBy String         @default("")
+    TodoHistory    TodoHistory[]
+}
+
+model TodoHistory {
+    id             String         @id @default(uuid())
+    todoId         String
+    title          String?
+    description    String?
+    done           Boolean?
+    todoColor      String?
+    lastModifiedBy String
+    createdAt      DateTime       @default(now())
+    collaborators  Collaborator[]
+    userId         String?
+    user           User?          @relation(fields: [userId], references: [id])
+    Todo           Todo           @relation(fields: [todoId], references: [id])
+
+    @@index([todoId])
+}
+
+model Image {
+    id            String   @id @default(cuid())
+    url           String
+    todo          Todo     @relation(fields: [todoId], references: [id], onDelete: Cascade)
+    todoId        String
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @default(now()) @updatedAt
+    todoHistoryId String?
+}
+
+model Collaborator {
+    id            String       @id @default(cuid())
+    user          User         @relation(fields: [userId], references: [id])
+    userId        String
+    todo          Todo         @relation(fields: [todoId], references: [id], onDelete: Cascade)
+    todoId        String
+    isOwner       Boolean      @default(false)
+    createdAt     DateTime     @default(now())
+    updatedAt     DateTime     @default(now()) @updatedAt
+    TodoHistory   TodoHistory? @relation(fields: [todoHistoryId], references: [id])
+    todoHistoryId String?
+
+    @@unique([userId, todoId])
 }
 
 model Category {
