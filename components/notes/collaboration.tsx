@@ -65,6 +65,7 @@ export const Collaboration: React.FC<CollaborationProps> = ({
         variant: result.success ? 'default' : 'destructive',
       });
     } catch (error) {
+      console.error('Error removing collaborator:', error);
       toast({
         title: 'Error',
         description: 'An error occurred while removing the collaborator.',
