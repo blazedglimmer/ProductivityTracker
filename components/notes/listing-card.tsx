@@ -386,9 +386,9 @@ export const ListingCard = ({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="absolute top-2 right-2">
+          {/* <div className="absolute top-2 left-2">
             <Pin size={24} />
-          </div>
+          </div> */}
           <DialogClose>Close</DialogClose>
         </DialogFooter>
       </DialogContent>
