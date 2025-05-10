@@ -13,6 +13,7 @@ import {
   Moon,
   Sun,
   Utensils,
+  Notebook,
 } from 'lucide-react';
 
 import {
@@ -70,6 +71,11 @@ const menuItems = [
         title: 'Dashboard',
         url: '/dashboard',
         icon: PieChart,
+      },
+      {
+        title: 'Notes',
+        url: '/notes',
+        icon: Notebook,
       },
     ],
   },
