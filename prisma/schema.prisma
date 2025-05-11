@@ -67,7 +67,7 @@ model TodoHistory {
     collaborators  Collaborator[]
     userId         String?
     user           User?          @relation(fields: [userId], references: [id])
-    Todo           Todo           @relation(fields: [todoId], references: [id])
+    Todo           Todo           @relation(fields: [todoId], references: [id], onDelete: Cascade)
 
     @@index([todoId])
 }
