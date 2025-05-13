@@ -17,7 +17,8 @@ export function AppLayoutContent({ children }: { children: React.ReactNode }) {
         //   width: isSidebarOpen ? 'calc(100vw - 274px)' : 'calc(100vw - 28px)',
         // }}
       >
-        <div className="w-full max-w-5xl px-4 py-8">
+        <div className="w-full max-w-full px-4 py-8">
+          {/* Adjust max width for above div wrapper based on requirement */}
           <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
