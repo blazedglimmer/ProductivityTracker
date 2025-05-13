@@ -32,7 +32,7 @@ import {
   EllipsisVertical,
   CircleCheck,
   Palette,
-  Pin,
+  PinIcon as Pin,
   Trash2,
   CircleX,
 } from 'lucide-react';
@@ -214,7 +214,7 @@ export const ListingCard = ({
             <CircleCheck size={24} fill="#ffffff" stroke="#000000" />
           </div>
           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Pin size={24} />
+            <Pin size={16} />
           </div>
         </Card>
       </DialogTrigger>
