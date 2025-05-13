@@ -24,6 +24,10 @@ export default function CreateNotes({ userId }: { userId: string }) {
   } = useColorPalette();
 
   async function action(formData: FormData) {
+    const loadingToastId = toast.loading('Creating note...', {
+      description: 'Please wait while we create your note.',
+      position: 'top-center',
+    });
     const res = await createTodo(formData, userId, bgColor);
     formRef.current?.reset();
     if (res.error) {
@@ -31,6 +35,7 @@ export default function CreateNotes({ userId }: { userId: string }) {
     } else {
       toast.success('Success', { description: res.message });
     }
+    toast.dismiss(loadingToastId);
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

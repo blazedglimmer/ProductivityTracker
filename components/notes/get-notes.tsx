@@ -1,6 +1,5 @@
 'use server';
 import { getTodo } from '@/app/actions/notes-actions';
-// import { PaginateTodo } from '@/components/paginate-todo';
 import { parseFormattedText } from '@/common/notes/formatted-text';
 import {
   CardContent,

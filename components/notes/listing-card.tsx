@@ -136,6 +136,10 @@ export const ListingCard = ({
   }
 
   async function action(formData: FormData) {
+    const loadingToastId = toast.loading('Updating note...', {
+      description: 'Please wait while we update your note.',
+      position: 'top-center',
+    });
     const res = await updateTodo(
       item.id,
       formData,
@@ -148,6 +152,7 @@ export const ListingCard = ({
     } else {
       toast.success('Success', { description: res.message });
     }
+    toast.dismiss(loadingToastId);
   }
 
   useIsomorphicLayoutEffect(() => {

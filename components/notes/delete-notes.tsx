@@ -33,6 +33,9 @@ export const DeleteNotes = ({ id, userId }: { id: string; userId: string }) => {
               type="submit"
               onClick={async e => {
                 e.stopPropagation();
+                const deleteToastId = toast.loading('Deleting note...', {
+                  position: 'top-center',
+                });
                 const res = await deleteTodo(id, userId);
                 if (res.error) {
                   toast.error('Uh oh! Something went wrong.', {
@@ -43,6 +46,7 @@ export const DeleteNotes = ({ id, userId }: { id: string; userId: string }) => {
                     description: res.message,
                   });
                 }
+                toast.dismiss(deleteToastId);
               }}
             >
               Confirm
