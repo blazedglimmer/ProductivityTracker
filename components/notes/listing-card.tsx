@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { RefObject, useRef } from 'react';
 
 import { useOutsideClick } from '@/hooks/use-outside-click';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { handleKeyDown, autoResizeTextarea } from '@/common/notes/utility';
 import { ImageUploadButton } from '@/components/upload-image';
 import { Collaboration } from '@/components/notes/collaboration';
@@ -84,7 +84,6 @@ export const ListingCard = ({
   } = useColorPalette();
 
   const formRef = useRef<HTMLFormElement>(null);
-  const { toast } = useToast();
 
   useOutsideClick(colorPaletteRef as RefObject<HTMLElement>, () => {
     setIsOpened(false);
@@ -121,22 +120,19 @@ export const ListingCard = ({
     e.stopPropagation();
     const result = await deleteImage(imageId);
     if (result.success) {
-      toast({ title: 'Image deleted successfully' });
+      toast.success('Image deleted successfully');
     } else {
-      toast({
-        title: 'Something went wrong! Please try again',
-        variant: 'destructive',
-      });
+      toast.error('Something went wrong! Please try again');
     }
   };
 
   async function copyNotes(formData: FormData) {
     const res = await createTodo(formData, userId, bgColor);
-    toast({
-      title: res.error ? 'Uh oh! Something went wrong.' : 'success',
-      description: res.message,
-      variant: res.error ? 'destructive' : 'default',
-    });
+    if (res.error) {
+      toast.error('Uh oh! Something went wrong.', { description: res.message });
+    } else {
+      toast.success('Success', { description: res.message });
+    }
   }
 
   async function action(formData: FormData) {
@@ -147,11 +143,11 @@ export const ListingCard = ({
       bgColor ? bgColor : item.todoColor
     );
     formRef.current?.reset();
-    toast({
-      title: res.error ? 'Uh oh! Something went wrong.' : 'success',
-      description: res.message,
-      variant: res.error ? 'destructive' : 'default',
-    });
+    if (res.error) {
+      toast.error('Uh oh! Something went wrong.', { description: res.message });
+    } else {
+      toast.success('Success', { description: res.message });
+    }
   }
 
   useIsomorphicLayoutEffect(() => {

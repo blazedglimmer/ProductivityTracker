@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState, RefObject } from 'react';
 import { createTodo } from '@/app/actions/notes-actions';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { ImageIcon, Palette, SquareCheckBig } from 'lucide-react';
 import { useOutsideClick } from '@/hooks/use-outside-click';
 import { handleKeyDown, autoResizeTextarea } from '@/common/notes/utility';
@@ -13,7 +13,7 @@ export default function CreateNotes({ userId }: { userId: string }) {
   const formRef = useRef<HTMLFormElement>(null);
   const expandRef = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>;
   const [isExpanded, setIsExpanded] = useState(false);
-  const { toast } = useToast();
+
   const {
     isOpened,
     setIsOpened,
@@ -26,11 +26,11 @@ export default function CreateNotes({ userId }: { userId: string }) {
   async function action(formData: FormData) {
     const res = await createTodo(formData, userId, bgColor);
     formRef.current?.reset();
-    toast({
-      title: res.error ? 'Uh oh! Something went wrong.' : 'success',
-      description: res.message,
-      variant: res.error ? 'destructive' : 'default',
-    });
+    if (res.error) {
+      toast.error('Uh oh! Something went wrong.', { description: res.message });
+    } else {
+      toast.success('Success', { description: res.message });
+    }
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

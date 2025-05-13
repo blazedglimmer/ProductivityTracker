@@ -11,10 +11,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 export const DeleteNotes = ({ id, userId }: { id: string; userId: string }) => {
-  const { toast } = useToast();
   return (
     <Dialog>
       <DialogTrigger onClick={e => e.stopPropagation()}>
@@ -35,11 +34,15 @@ export const DeleteNotes = ({ id, userId }: { id: string; userId: string }) => {
               onClick={async e => {
                 e.stopPropagation();
                 const res = await deleteTodo(id, userId);
-                toast({
-                  title: res.error ? 'Uh oh! Something went wrong.' : 'Success',
-                  description: res.message,
-                  variant: res.error ? 'destructive' : 'default',
-                });
+                if (res.error) {
+                  toast.error('Uh oh! Something went wrong.', {
+                    description: res.message,
+                  });
+                } else {
+                  toast.success('Success', {
+                    description: res.message,
+                  });
+                }
               }}
             >
               Confirm
