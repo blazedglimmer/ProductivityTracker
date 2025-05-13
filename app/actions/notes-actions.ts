@@ -43,7 +43,7 @@ export async function createTodo(
   });
 
   revalidatePath('/');
-  return { success: true, message: 'Created todo successfully', error: false };
+  return { success: true, message: 'Created note successfully', error: false };
 }
 
 export async function deleteTodo(
@@ -57,14 +57,14 @@ export async function deleteTodo(
     });
 
     if (!todo) {
-      return { success: false, error: true, message: 'Todo not found' };
+      return { success: false, error: true, message: 'Note not found' };
     }
 
     if (todo.userId !== userId) {
       return {
         success: false,
         error: true,
-        message: 'You are not authorized to delete this todo',
+        message: 'You are not authorized to delete this note',
       };
     }
 
@@ -76,7 +76,7 @@ export async function deleteTodo(
 
     return {
       success: true,
-      message: 'Deleted todo successfully',
+      message: 'Deleted note successfully',
       error: false,
     };
   } catch (error) {
@@ -104,7 +104,7 @@ export async function updateTodo(
       return {
         success: false,
         error: true,
-        message: 'Todo not found',
+        message: 'Note not found',
       };
     }
 
@@ -117,7 +117,7 @@ export async function updateTodo(
       return {
         success: false,
         error: true,
-        message: 'You are not authorized to update this todo',
+        message: 'You are not authorized to update this note',
       };
     }
 
@@ -163,10 +163,10 @@ export async function updateTodo(
     return {
       success: true,
       error: false,
-      message: 'Updated todo successfully',
+      message: 'Updated note successfully',
     };
   } catch (error) {
-    console.error('Error updating todo:', error);
+    console.error('Error updating note:', error);
     return {
       success: false,
       error: true,
@@ -262,7 +262,7 @@ export async function getTodo(
     return {
       success: true,
       error: false,
-      message: 'Fetched todo details successfully',
+      message: 'Fetched note details successfully',
       // todo: todos || [],
       todo:
         todos.map(todo => ({
@@ -271,7 +271,7 @@ export async function getTodo(
             ...todo.user,
             username: todo.user.username ?? 'Unknown', // Provide a fallback for null username
           },
-        })) || [], // This will be an empty array if no todos are found
+        })) || [], // This will be an empty array if no notes are found
       totalCount,
       currentPage: page,
       totalPages,
