@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,7 @@ import {
   addCollaborator,
   removeCollaborator,
 } from '@/app/actions/collaborate-actions';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 type CollaboratorWithUser = Collaborator & { user: User };
 
@@ -30,7 +30,6 @@ export const Collaboration: React.FC<CollaborationProps> = ({
   todoId,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { toast } = useToast();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,17 +39,22 @@ export const Collaboration: React.FC<CollaborationProps> = ({
     if (collaborator) {
       try {
         const result = await addCollaborator(todoId, collaborator);
-        toast({
-          title: result.success ? 'Success' : 'Error',
-          description: result.message,
-          variant: result.success ? 'default' : 'destructive',
-        });
+        if (result.success) {
+          toast.success('Success', {
+            description: result.message,
+          });
+        } else {
+          toast.error('Uh oh! Something went wrong.', {
+            description: result.message,
+          });
+        }
       } catch (error) {
         console.error('Error adding collaborator:', error);
-        toast({
-          title: 'Error',
-          description: 'something went wrong',
-          variant: 'destructive',
+        toast.error('Uh oh! Something went wrong.', {
+          description:
+            error instanceof Error
+              ? error.message
+              : 'An error occurred while adding the collaborator.',
         });
       }
     }
@@ -59,17 +63,22 @@ export const Collaboration: React.FC<CollaborationProps> = ({
   const handleRemove = async (collaboratorId: string) => {
     try {
       const result = await removeCollaborator(todoId, collaboratorId);
-      toast({
-        title: result.success ? 'Success' : 'Error',
-        description: result.message,
-        variant: result.success ? 'default' : 'destructive',
-      });
+      if (result.success) {
+        toast.success('Success', {
+          description: result.message,
+        });
+      } else {
+        toast.error('Uh oh! Something went wrong.', {
+          description: result.message,
+        });
+      }
     } catch (error) {
       console.error('Error removing collaborator:', error);
-      toast({
-        title: 'Error',
-        description: 'An error occurred while removing the collaborator.',
-        variant: 'destructive',
+      toast.error('Uh oh! Something went wrong.', {
+        description:
+          error instanceof Error
+            ? error.message
+            : 'An error occurred while adding the collaborator.',
       });
     }
   };

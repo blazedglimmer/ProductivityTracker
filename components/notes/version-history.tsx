@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { CircleX } from 'lucide-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export const VersionHistory = ({ id }: { id: string }) => {
   const [versionData, setVersionData] = useState<

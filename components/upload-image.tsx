@@ -1,12 +1,10 @@
 'use client';
 
 import { ImageIcon } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { uploadImages } from '@/app/actions/upload-images';
 
 export function ImageUploadButton({ todoId }: { todoId: string }) {
-  const { toast } = useToast();
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
@@ -19,18 +17,16 @@ export function ImageUploadButton({ todoId }: { todoId: string }) {
         const response = await uploadImages(formData, todoId);
 
         if (response.success) {
-          toast({
-            title: 'Images uploaded successfully!',
-          });
+          toast.success('Images uploaded successfully!');
         } else {
           throw new Error(response.error || 'Upload failed');
         }
       } catch (err) {
-        toast({
-          title: 'Error',
+        toast.error('Uh oh! Something went wrong.', {
           description:
-            err instanceof Error ? err.message : 'An unknown error occurred',
-          variant: 'destructive',
+            err instanceof Error
+              ? err.message
+              : 'An error occurred while uploading the images.',
         });
       }
     }
