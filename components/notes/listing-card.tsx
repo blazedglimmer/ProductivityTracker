@@ -83,7 +83,6 @@ export const ListingCard = ({
     colorPaletteRef,
   } = useColorPalette();
 
-  const dialogContentRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
 
@@ -91,7 +90,7 @@ export const ListingCard = ({
     setIsOpened(false);
   });
 
-  useOutsideClick(dialogContentRef as RefObject<HTMLElement>, () => {
+  const handleFormSubmit = () => {
     const formData = new FormData(formRef.current!);
 
     // Normalize the input values by trimming and removing extra spaces and newlines
@@ -113,7 +112,7 @@ export const ListingCard = ({
     ) {
       action(formData);
     }
-  });
+  };
 
   const handleDelete = async (
     imageId: string,
@@ -222,7 +221,8 @@ export const ListingCard = ({
         className={`mb-4 max-h-screen border border-slate-700 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 break-inside-avoid-column ${getLightModeColor(
           item.todoColor
         )} ${getDarkModeColor(item.todoColor)}`}
-        ref={dialogContentRef}
+        onInteractOutside={handleFormSubmit}
+        onEscapeKeyDown={handleFormSubmit}
       >
         <DialogHeader>
           {item.images?.map((item: ImageProps) => (
