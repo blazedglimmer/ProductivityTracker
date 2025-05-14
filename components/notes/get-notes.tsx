@@ -11,27 +11,24 @@ import { ListingCard } from '@/components/notes/listing-card';
 import Image from 'next/image';
 import { getLightModeColor, getDarkModeColor } from '@/common/notes/common';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { NotesFeed } from '@/components/notes/notes-feed';
 
-const GetNotes = async ({
-  userId,
-  page,
-}: {
-  userId: string;
-  page?: string;
-}) => {
+const GetNotes = async ({ userId }: { userId: string }) => {
   const {
     todo,
     error,
-    // currentPage, totalPages, totalCount,
+    // currentPage,
+    totalPages,
+    // totalCount,
     message,
-  } = await getTodo(userId, page ? Number(page) : 1, 25);
+  } = await getTodo(userId, 1, 20);
 
   if (error) {
     <span> Error while fetching todos {message}</span>;
   }
 
   return (
-    <section className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 p-4 mt-10">
+    <NotesFeed userId={userId} initialLoad={totalPages === 1}>
       {todo?.map(item => (
         <ListingCard
           key={item.id}
@@ -84,7 +81,7 @@ const GetNotes = async ({
           </CardFooter>
         </ListingCard>
       ))}
-    </section>
+    </NotesFeed>
   );
 };
 
