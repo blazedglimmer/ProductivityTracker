@@ -5,12 +5,14 @@ import { revalidatePath } from 'next/cache';
 
 export async function addCollaborator(
   todoId: string,
-  username: string,
+  usernameOrEmail: string,
   isOwner: boolean = false
 ): Promise<{ success: boolean; message: string; data?: Collaborator }> {
   try {
-    const user = await prisma.user.findUnique({
-      where: { username },
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
+      },
     });
 
     if (!user) {

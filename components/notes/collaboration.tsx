@@ -107,7 +107,7 @@ export const Collaboration: React.FC<CollaborationProps> = ({
               type="text"
               name="collaborator"
               id="collaborator"
-              placeholder="Add collaborator by username"
+              placeholder="Add collaborator by username or email"
               className="w-full p-2 border rounded"
             />
             <Button type="submit">Add Collaborator</Button>
