@@ -197,6 +197,17 @@ export async function getTodo(
       id: string;
       url: string;
     }[];
+    collaborators: {
+      id: string;
+      isOwner: boolean;
+      user: {
+        id: string;
+        username: string;
+        name: string | null;
+        image: string | null;
+        email: string;
+      };
+    }[];
   }[];
   totalCount: number;
   currentPage: number;
@@ -243,6 +254,21 @@ export async function getTodo(
               id: true,
             },
           },
+          collaborators: {
+            select: {
+              id: true,
+              isOwner: true,
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  name: true,
+                  image: true,
+                  email: true,
+                },
+              },
+            },
+          },
         },
         skip,
         take: limit,
@@ -252,7 +278,7 @@ export async function getTodo(
       }),
       prisma.todo.count({
         where: {
-          userId,
+          OR: [{ userId }, { collaborators: { some: { userId } } }],
         },
       }),
     ]);
@@ -263,15 +289,22 @@ export async function getTodo(
       success: true,
       error: false,
       message: 'Fetched note details successfully',
-      // todo: todos || [],
-      todo:
-        todos.map(todo => ({
-          ...todo,
-          user: {
-            ...todo.user,
-            username: todo.user.username ?? 'Unknown', // Provide a fallback for null username
-          },
-        })) || [], // This will be an empty array if no notes are found
+      todo: todos || [],
+      // todo:
+      //   todos.map(todo => ({
+      //     ...todo,
+      //     user: {
+      //       ...todo.user,
+      //       username: todo.user.username ?? 'Unknown', // Provide a fallback for null username
+      //     },
+      //     collaborators: todo.collaborators.map(collab => ({
+      //       ...collab,
+      //       user: {
+      //         ...collab.user,
+      //         username: collab.user.username ?? 'Unknown', // Provide a fallback for null username in collaborators
+      //       },
+      //     })),
+      //   })) || [], // This will be an empty array if no notes are found
       totalCount,
       currentPage: page,
       totalPages,
