@@ -43,7 +43,7 @@ import {
   secondFormatDate,
 } from '@/common/notes/common';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Collaborator, User } from '@prisma/client';
+import { CollaboratorWithUser } from '@/types/notes';
 import { DeleteNotes } from '@/components/notes/delete-notes';
 import { VersionHistory } from '@/components/notes/version-history';
 
@@ -51,8 +51,6 @@ type ImageProps = {
   url: string;
   id: string;
 };
-
-type CollaboratorWithUser = Collaborator & { user: User };
 
 export const ListingCard = ({
   item,
@@ -72,7 +70,7 @@ export const ListingCard = ({
   children: React.ReactNode;
   className: string;
   userId: string;
-  collabs: CollaboratorWithUser[] | undefined;
+  collabs: CollaboratorWithUser[];
 }) => {
   const {
     isOpened,

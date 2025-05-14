@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { CircleUser, Crown } from 'lucide-react';
-import { Collaborator, User } from '@prisma/client';
+import { CollaboratorWithUser } from '@/types/notes';
 import { Button } from '@/components/ui/button';
 import {
   addCollaborator,
@@ -18,10 +18,8 @@ import {
 } from '@/app/actions/collaborate-actions';
 import { toast } from 'sonner';
 
-type CollaboratorWithUser = Collaborator & { user: User };
-
 interface CollaborationProps {
-  collabs: CollaboratorWithUser[] | undefined;
+  collabs: CollaboratorWithUser[];
   todoId: string;
 }
 
