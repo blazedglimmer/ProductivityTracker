@@ -388,7 +388,7 @@ export const ListingCard = ({
           {/* <div className="absolute top-2 left-2">
             <Pin size={24} />
           </div> */}
-          <DialogClose>Close</DialogClose>
+          <DialogClose className="hidden">Close</DialogClose>
         </DialogFooter>
       </DialogContent>
       {isOpened && (
