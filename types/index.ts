@@ -108,3 +108,29 @@ export interface FriendRequest {
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   createdAt: string;
 }
+
+export type Note = {
+  title: string;
+  description: string;
+  done: boolean;
+  id: string;
+  todoColor: string;
+  updatedAt: Date;
+  lastModifiedBy: string;
+  user: { username: string };
+  images: {
+    id: string;
+    url: string;
+  }[];
+  collaborators: {
+    id: string;
+    isOwner: boolean;
+    user: {
+      id: string;
+      username: string;
+      name: string | null;
+      image: string | null;
+      email: string;
+    };
+  }[];
+};
