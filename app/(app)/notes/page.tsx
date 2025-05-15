@@ -23,7 +23,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="container mx-auto p-4 m-12 max-h-screen w-full">
+    <div className="container mx-auto m-8 pr-[28px] max-h-screen w-full">
       <CreateNotes userId={userId} />
       <GetNotes userId={userId} />
     </div>
