@@ -116,7 +116,7 @@ export function Settings() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pr-[28px]">
       <Card className="p-4 sm:p-6">
         <h2 className="text-xl font-semibold mb-6">Categories</h2>
         <form onSubmit={handleAddCategory} className="space-y-4">

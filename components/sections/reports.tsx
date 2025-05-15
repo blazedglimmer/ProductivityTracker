@@ -259,7 +259,7 @@ export function Reports() {
   }, [inView, hasMore, isPending]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pr-[28px]">
       <div className="flex gap-4 items-center">
         <Select
           value={timeRange}

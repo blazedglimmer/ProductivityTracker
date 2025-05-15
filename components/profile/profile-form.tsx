@@ -48,7 +48,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   }
 
   return (
-    <Card className="p-6">
+    <Card className="p-6 pr-[28px]">
       <div className="flex flex-col items-center gap-6 mb-8">
         <div className="relative">
           <Avatar className="h-24 w-24">

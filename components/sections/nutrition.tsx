@@ -28,7 +28,7 @@ export function Nutrition() {
   const [showAddFood, setShowAddFood] = useState(false);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pr-[28px]">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold tracking-tight">

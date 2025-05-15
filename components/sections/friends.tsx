@@ -138,7 +138,7 @@ export function Friends() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pr-[28px]">
       <Card className="p-4 sm:p-6">
         <Tabs defaultValue="friends" className="w-full">
           <TabsList className="mb-4 w-full justify-start overflow-x-auto">

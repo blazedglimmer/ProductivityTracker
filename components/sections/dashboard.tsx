@@ -187,7 +187,7 @@ export function Dashboard({ categories }: { categories: Category[] }) {
   }, [inView, hasMore, isPending]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pr-[28px]">
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
         <Select
           value={timeRange}

@@ -126,7 +126,7 @@ export function Calendar() {
   const dayStats = calculateDayStats(selectedDayEntries);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pr-[28px]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <Select
           value={viewMode}
