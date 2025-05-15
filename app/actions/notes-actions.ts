@@ -277,9 +277,10 @@ export async function getTodo(
         },
         skip,
         take: limit,
-        orderBy: {
-          createdAt: 'desc',
-        },
+        orderBy: [
+          { pinned: 'desc' }, // pinned ones come first
+          { createdAt: 'desc' }, // newest first within pinned/unpinned groups
+        ],
       }),
       prisma.todo.count({
         where: {
