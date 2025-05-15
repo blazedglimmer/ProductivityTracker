@@ -113,6 +113,7 @@ export type Note = {
   title: string;
   description: string;
   done: boolean;
+  pinned: boolean;
   id: string;
   todoColor: string;
   updatedAt: Date;
