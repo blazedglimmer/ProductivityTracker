@@ -46,6 +46,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { CollaboratorWithUser } from '@/types/notes';
 import { DeleteNotes } from '@/components/notes/delete-notes';
 import { VersionHistory } from '@/components/notes/version-history';
+import { Note } from '@/types';
 
 type ImageProps = {
   url: string;
@@ -61,14 +62,7 @@ export const ListingCard = ({
   refreshPage,
   page,
 }: {
-  item: {
-    id: string;
-    todoColor: string;
-    title: string;
-    description: string;
-    images: ImageProps[];
-    updatedAt: Date;
-  };
+  item: Note;
   children: React.ReactNode;
   className: string;
   userId: string;
@@ -137,7 +131,7 @@ export const ListingCard = ({
     }
   }
 
-  async function action(formData: FormData) {
+  async function action(formData: FormData, pinned?: boolean) {
     const loadingToastId = toast.loading('Updating note...', {
       description: 'Please wait while we update your note.',
       position: 'top-center',
@@ -146,7 +140,8 @@ export const ListingCard = ({
       item.id,
       formData,
       userId,
-      bgColor ? bgColor : item.todoColor
+      bgColor ? bgColor : item.todoColor,
+      pinned !== undefined ? pinned : item.pinned
     );
     formRef.current?.reset();
     if (res.error) {
@@ -218,8 +213,21 @@ export const ListingCard = ({
           {/* <div className="absolute top-[-10] left-[-10] opacity-0 group-hover:opacity-100 transition-opacity">
             <CircleCheck size={24} fill="#ffffff" stroke="#000000" />
           </div> */}
-          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Pin size={16} />
+          <div
+            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+            onClick={e => {
+              e.stopPropagation();
+              const formData = new FormData();
+              formData.append('title', item.title);
+              formData.append('description', item.description);
+              action(formData, !item.pinned);
+            }}
+          >
+            {item.pinned ? (
+              <Pin size={16} fill="#ffffff" stroke="#000000" />
+            ) : (
+              <Pin size={16} fill="none" stroke="#FEFEFE" />
+            )}
           </div>
         </Card>
       </DialogTrigger>
