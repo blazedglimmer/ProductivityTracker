@@ -273,7 +273,7 @@ export async function getTodo(
         skip,
         take: limit,
         orderBy: {
-          updatedAt: 'desc',
+          createdAt: 'desc',
         },
       }),
       prisma.todo.count({
