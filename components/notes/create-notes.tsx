@@ -52,8 +52,7 @@ export default function CreateNotes({ userId }: { userId: string }) {
   useOutsideClick(expandRef, () => {
     if (isExpanded) {
       const formData = new FormData(formRef.current!);
-      if (formData.get('title') && formData.get('description')) {
-        // will keep this condition check until we have both these fields required, will change the schema later, to have these optional and make either of these mandatory
+      if (formData.get('title') || formData.get('description')) {
         action(formData);
       }
     }

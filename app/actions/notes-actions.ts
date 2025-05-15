@@ -8,15 +8,15 @@ export async function createTodo(
   userId: string,
   bgColor?: string
 ): Promise<{ success: boolean; error: boolean; message: string }> {
-  const title = formData.get('title') as string;
-  const description = formData.get('description') as string;
+  const title = (formData.get('title') as string) || '';
+  const description = (formData.get('description') as string) || '';
   const done = formData.get('done') === 'true';
 
-  if (!title || !description) {
+  if (!title && !description) {
     return {
       success: false,
       error: true,
-      message: 'Title and description are required',
+      message: 'At least one of title or description is required',
     };
   }
 
@@ -125,11 +125,11 @@ export async function updateTodo(
     const description = formData.get('description') as string;
     const done = formData.get('done') === 'true';
 
-    if (!title || !description) {
+    if (!title && !description) {
       return {
         success: false,
         error: true,
-        message: 'Title and description are required',
+        message: 'At least one of title or description is required',
       };
     }
 
@@ -137,8 +137,8 @@ export async function updateTodo(
       await prisma.todoHistory.create({
         data: {
           todoId: id,
-          title: todo.title,
-          description: todo.description,
+          title: todo.title || '',
+          description: todo.description || '',
           done: todo.done,
           todoColor: todo.todoColor,
           lastModifiedBy: todo.lastModifiedBy ?? userId,
