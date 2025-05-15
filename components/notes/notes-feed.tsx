@@ -60,13 +60,33 @@ export const NotesFeed = ({
     };
   }, [loadMore, hasMore]);
 
+  const refreshPage = async (pageNumber: number) => {
+    const res = await getTodo(userId, pageNumber, 20);
+    if (res.success) {
+      setMoreNotes(prev => {
+        const updated = [...prev];
+        const startIndex = (pageNumber - 2) * 20; // because page 1 is SSR
+        if (startIndex >= 0) {
+          updated.splice(startIndex, 20, ...res.todo); // ✅ replace exactly 20 items, change as per the page size
+        }
+        return updated;
+      });
+    }
+  };
+
   return (
     <>
       <section className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 p-4 mt-10">
         {children}
 
-        {moreNotes.map(item => (
-          <NotesItem item={item} userId={userId} key={item.id} /> // Render on client
+        {moreNotes.map((item, i) => (
+          <NotesItem
+            item={item}
+            userId={userId}
+            key={item.id}
+            refreshPage={refreshPage}
+            page={Math.floor(i / 20) + 2}
+          /> // Render on client
         ))}
       </section>
 

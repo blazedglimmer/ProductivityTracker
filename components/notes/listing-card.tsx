@@ -58,6 +58,8 @@ export const ListingCard = ({
   className,
   userId,
   collabs,
+  refreshPage,
+  page,
 }: {
   item: {
     id: string;
@@ -71,6 +73,8 @@ export const ListingCard = ({
   className: string;
   userId: string;
   collabs: CollaboratorWithUser[];
+  refreshPage?: (page: number) => void;
+  page?: number;
 }) => {
   const {
     isOpened,
@@ -149,6 +153,9 @@ export const ListingCard = ({
       toast.error('Uh oh! Something went wrong.', { description: res.message });
     } else {
       toast.success('Success', { description: res.message });
+      if (page) {
+        refreshPage?.(page);
+      }
     }
     toast.dismiss(loadingToastId);
   }

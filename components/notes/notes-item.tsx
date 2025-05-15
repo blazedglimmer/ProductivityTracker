@@ -11,7 +11,17 @@ import { parseFormattedText } from '@/common/notes/formatted-text';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Note } from '@/types';
 
-export const NotesItem = ({ item, userId }: { item: Note; userId: string }) => (
+export const NotesItem = ({
+  item,
+  userId,
+  refreshPage,
+  page,
+}: {
+  item: Note;
+  userId: string;
+  refreshPage?: (page: number) => void;
+  page?: number;
+}) => (
   <ListingCard
     key={item.id}
     item={item}
@@ -20,6 +30,8 @@ export const NotesItem = ({ item, userId }: { item: Note; userId: string }) => (
       item.todoColor
     )} ${getDarkModeColor(item.todoColor)}`}
     collabs={item.collaborators}
+    refreshPage={refreshPage}
+    page={page}
   >
     <CardHeader className="py-2 px-4">
       {item.images?.map((img: { id: string; url: string }) => (
