@@ -30,7 +30,7 @@ import {
 import { useColorPalette } from '@/hooks/use-color-palette';
 import {
   EllipsisVertical,
-  CircleCheck,
+  // CircleCheck,   // Uncomment when we build the feature for it
   Palette,
   PinIcon as Pin,
   Trash2,
@@ -208,9 +208,9 @@ export const ListingCard = ({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="absolute top-[-10] left-[-10] opacity-0 group-hover:opacity-100 transition-opacity">
+          {/* <div className="absolute top-[-10] left-[-10] opacity-0 group-hover:opacity-100 transition-opacity">
             <CircleCheck size={24} fill="#ffffff" stroke="#000000" />
-          </div>
+          </div> */}
           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <Pin size={16} />
           </div>
