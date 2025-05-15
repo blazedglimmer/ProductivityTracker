@@ -88,7 +88,8 @@ export async function updateTodo(
   id: string,
   formData: FormData,
   userId: string,
-  bgColor?: string
+  bgColor?: string,
+  pinned?: boolean
 ): Promise<{ success: boolean; error: boolean; message: string }> {
   try {
     const todo = await prisma.todo.findUnique({
@@ -140,6 +141,7 @@ export async function updateTodo(
           title: todo.title || '',
           description: todo.description || '',
           done: todo.done,
+          pinned: todo.pinned,
           todoColor: todo.todoColor,
           lastModifiedBy: todo.lastModifiedBy ?? userId,
           createdAt: todo.updatedAt,
@@ -153,6 +155,7 @@ export async function updateTodo(
         title,
         description,
         done,
+        pinned,
         todoColor: bgColor,
         lastModifiedBy: userId,
       },
@@ -188,6 +191,7 @@ export async function getTodo(
     title: string;
     description: string;
     done: boolean;
+    pinned: boolean;
     id: string;
     todoColor: string;
     updatedAt: Date;
@@ -239,6 +243,7 @@ export async function getTodo(
           title: true,
           description: true,
           done: true,
+          pinned: true,
           id: true,
           todoColor: true,
           updatedAt: true,
