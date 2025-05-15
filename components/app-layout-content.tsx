@@ -7,7 +7,7 @@ export function AppLayoutContent({ children }: { children: React.ReactNode }) {
   const { open: isSidebarOpen } = useSidebar();
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex w-[calc(100vw-28px)] md:w-auto bg-background">
       <main
         className={`flex-1 transition-all duration-300 flex justify-center ${
           isSidebarOpen ? 'w-[calc(100vw-274px)]' : 'w-[calc(100vw-28px)]'
