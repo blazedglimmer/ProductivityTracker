@@ -52,7 +52,7 @@ export const NotesItem = ({
     <CardContent className="py-2 px-4 break-words">
       {parseFormattedText(item.description)}
     </CardContent>
-    <CardFooter className="mb-4">
+    <CardFooter className="px-2">
       {item.collaborators
         ?.filter(c => c.user.id !== userId)
         .map(c => (
