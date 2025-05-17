@@ -117,6 +117,7 @@ export type Note = {
   id: string;
   todoColor: string;
   updatedAt: Date;
+  createdAt: Date;
   lastModifiedBy: string;
   user: { username: string };
   images: {

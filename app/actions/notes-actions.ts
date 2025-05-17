@@ -195,6 +195,7 @@ export async function getTodo(
     id: string;
     todoColor: string;
     updatedAt: Date;
+    createdAt: Date;
     lastModifiedBy: string;
     user: { username: string };
     images: {
@@ -247,6 +248,7 @@ export async function getTodo(
           id: true,
           todoColor: true,
           updatedAt: true,
+          createdAt: true,
           lastModifiedBy: true,
           user: {
             select: {
@@ -335,3 +337,54 @@ export async function getTodoHistory(todoId: string) {
     orderBy: { createdAt: 'desc' },
   });
 }
+
+// import { Note } from '@/types';
+// export async function pinNote(noteId: string, pinned: boolean): Promise<Note> {
+//   const updated = await prisma.todo.update({
+//     where: { id: noteId },
+//     data: { pinned },
+//     select: {
+//       id: true,
+//       createdAt: true,
+//       updatedAt: true,
+//       userId: true,
+//       title: true,
+//       description: true,
+//       done: true,
+//       pinned: true,
+//       todoColor: true,
+//       lastModifiedBy: true,
+//       user: {
+//         select: {
+//           id: true,
+//           username: true,
+//           name: true,
+//           image: true,
+//           email: true,
+//         },
+//       },
+//       images: {
+//         select: {
+//           id: true,
+//           url: true,
+//         },
+//       },
+//       collaborators: {
+//         select: {
+//           id: true,
+//           isOwner: true,
+//           user: {
+//             select: {
+//               id: true,
+//               username: true,
+//               name: true,
+//               image: true,
+//               email: true,
+//             },
+//           },
+//         },
+//       },
+//     },
+//   });
+//   return updated;
+// }
