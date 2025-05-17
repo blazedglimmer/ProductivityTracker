@@ -180,7 +180,12 @@ export const ListingCard = ({
               className="cursor-pointer"
             />
             <ImageUploadButton todoId={item.id} />
-            <Collaboration collabs={collabs} todoId={item.id} />
+            <Collaboration
+              collabs={collabs}
+              todoId={item.id}
+              page={page}
+              refreshPage={refreshPage}
+            />
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <EllipsisVertical size={16} className="cursor-pointer" />
@@ -370,7 +375,12 @@ export const ListingCard = ({
               </DialogContent>
             </Dialog>
             <ImageUploadButton todoId={item.id} />
-            <Collaboration collabs={collabs} todoId={item.id} />
+            <Collaboration
+              collabs={collabs}
+              todoId={item.id}
+              page={page}
+              refreshPage={refreshPage}
+            />
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <EllipsisVertical size={16} className="cursor-pointer" />

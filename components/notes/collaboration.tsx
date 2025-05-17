@@ -21,11 +21,15 @@ import { toast } from 'sonner';
 interface CollaborationProps {
   collabs: CollaboratorWithUser[];
   todoId: string;
+  refreshPage?: (page: number) => void;
+  page?: number;
 }
 
 export const Collaboration: React.FC<CollaborationProps> = ({
   collabs,
   todoId,
+  refreshPage,
+  page,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,6 +45,9 @@ export const Collaboration: React.FC<CollaborationProps> = ({
           toast.success('Success', {
             description: result.message,
           });
+          if (page) {
+            refreshPage?.(page);
+          }
         } else {
           toast.error('Uh oh! Something went wrong.', {
             description: result.message,
@@ -65,6 +72,9 @@ export const Collaboration: React.FC<CollaborationProps> = ({
         toast.success('Success', {
           description: result.message,
         });
+        if (page) {
+          refreshPage?.(page);
+        }
       } else {
         toast.error('Uh oh! Something went wrong.', {
           description: result.message,
