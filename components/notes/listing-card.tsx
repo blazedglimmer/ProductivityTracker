@@ -61,6 +61,7 @@ export const ListingCard = ({
   collabs,
   refreshPage,
   page,
+  onUnpin,
 }: {
   item: Note;
   children: React.ReactNode;
@@ -69,6 +70,7 @@ export const ListingCard = ({
   collabs: CollaboratorWithUser[];
   refreshPage?: (page: number) => void;
   page?: number;
+  onUnpin?: (createdAt: Date) => Promise<void>;
 }) => {
   const {
     isOpened,
@@ -226,6 +228,9 @@ export const ListingCard = ({
               formData.append('title', item.title);
               formData.append('description', item.description);
               action(formData, !item.pinned);
+              if (item.pinned) {
+                onUnpin?.(item.createdAt);
+              }
             }}
           >
             {item.pinned ? (

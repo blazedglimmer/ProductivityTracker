@@ -1,6 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  Children,
+  isValidElement,
+  cloneElement,
+} from 'react';
 import { getTodo } from '@/app/actions/notes-actions'; // ✅ server action
 import { NotesItem } from '@/components/notes/notes-item';
 import { Note } from '@/types';
@@ -74,10 +82,32 @@ export const NotesFeed = ({
     }
   };
 
+  const refreshPageByCreatedAt = async (createdAt: Date) => {
+    // Find the index where this unpinned note would fall
+    const index = moreNotes.findIndex(
+      note => new Date(note.createdAt) < new Date(createdAt)
+    );
+
+    // Determine page number from index
+    const inferredPage = index === -1 ? page : Math.floor(index / 20) + 2; // +2 since page 1 is SSR and moreNotes starts from page 2
+    await refreshPage(inferredPage - 1);
+  };
+
+  const handleUnpin = async (item: Note) => {
+    await refreshPageByCreatedAt(item.createdAt);
+  };
+
   return (
     <>
       <section className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 p-4 mt-10">
-        {children}
+        {Children.map(children, child =>
+          isValidElement(child)
+            ? cloneElement(
+                child as React.ReactElement<{ onUnpin: (item: Note) => void }>,
+                { onUnpin: handleUnpin }
+              )
+            : child
+        )}
 
         {moreNotes.map((item, i) => (
           <NotesItem
@@ -86,6 +116,7 @@ export const NotesFeed = ({
             key={item.id}
             refreshPage={refreshPage}
             page={Math.floor(i / 20) + 2}
+            onUnpin={refreshPageByCreatedAt}
           /> // Render on client
         ))}
       </section>

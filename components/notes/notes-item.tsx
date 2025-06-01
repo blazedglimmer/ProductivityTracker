@@ -16,11 +16,13 @@ export const NotesItem = ({
   userId,
   refreshPage,
   page,
+  onUnpin,
 }: {
   item: Note;
   userId: string;
   refreshPage?: (page: number) => void;
   page?: number;
+  onUnpin?: (createdAt: Date) => Promise<void>;
 }) => (
   <ListingCard
     key={item.id}
@@ -32,6 +34,7 @@ export const NotesItem = ({
     collabs={item.collaborators}
     refreshPage={refreshPage}
     page={page}
+    onUnpin={onUnpin}
   >
     <CardHeader className="py-2 px-4">
       {item.images?.map((img: { id: string; url: string }) => (
