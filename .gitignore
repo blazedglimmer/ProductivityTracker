@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+_get_notes_v2.tsx
+_notes_feed_v1.tsx
+_notes_feed_v2.tsx
