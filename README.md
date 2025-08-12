@@ -70,7 +70,7 @@ A modern, full-stack productivity tracking application built with Next.js, featu
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/blazedglimmer/ProductivityTracker
 cd flowsync
 ```
 
