@@ -14,15 +14,15 @@ import { Note } from '@/types';
 export const NotesItem = ({
   item,
   userId,
-  refreshPage,
+  onPin,
   page,
   onUnpin,
 }: {
   item: Note;
   userId: string;
-  refreshPage?: (page: number) => void;
+  onPin?: (note: Note) => Promise<void>;
   page?: number;
-  onUnpin?: (createdAt: Date) => Promise<void>;
+  onUnpin?: (note: Note) => Promise<void>;
 }) => (
   <ListingCard
     key={item.id}
@@ -32,7 +32,7 @@ export const NotesItem = ({
       item.todoColor
     )} ${getDarkModeColor(item.todoColor)}`}
     collabs={item.collaborators}
-    refreshPage={refreshPage}
+    refreshPage={onPin}
     page={page}
     onUnpin={onUnpin}
   >

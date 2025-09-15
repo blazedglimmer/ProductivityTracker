@@ -17,11 +17,11 @@ import {
   removeCollaborator,
 } from '@/app/actions/collaborate-actions';
 import { toast } from 'sonner';
-
+import { Note } from '@/types';
 interface CollaborationProps {
   collabs: CollaboratorWithUser[];
   todoId: string;
-  refreshPage?: (page: number) => void;
+  refreshPage?: (page: Note) => Promise<void>;
   page?: number;
 }
 

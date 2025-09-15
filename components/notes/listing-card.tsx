@@ -68,9 +68,9 @@ export const ListingCard = ({
   className: string;
   userId: string;
   collabs: CollaboratorWithUser[];
-  refreshPage?: (page: number) => void;
+  refreshPage?: (note: Note) => Promise<void>;
   page?: number;
-  onUnpin?: (createdAt: Date) => Promise<void>;
+  onUnpin?: (note: Note) => Promise<void>;
 }) => {
   const {
     isOpened,
@@ -151,7 +151,7 @@ export const ListingCard = ({
     } else {
       toast.success('Success', { description: res.message });
       if (page) {
-        refreshPage?.(page);
+        refreshPage?.(item);
       }
     }
     toast.dismiss(loadingToastId);
@@ -229,7 +229,7 @@ export const ListingCard = ({
               formData.append('description', item.description);
               action(formData, !item.pinned);
               if (item.pinned) {
-                onUnpin?.(item.createdAt);
+                onUnpin?.(item);
               }
             }}
           >

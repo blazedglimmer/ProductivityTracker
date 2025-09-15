@@ -72,29 +72,52 @@ export const NotesFeed = ({
     const res = await getTodo(userId, pageNumber, 20);
     if (res.success) {
       setMoreNotes(prev => {
+        const startIndex = (pageNumber - 2) * 20;
         const updated = [...prev];
-        const startIndex = (pageNumber - 2) * 20; // because page 1 is SSR
-        if (startIndex >= 0) {
-          updated.splice(startIndex, 20, ...res.todo); // ✅ replace exactly 20 items, change as per the page size
-        }
-        return updated;
+
+        // Remove duplicates if note already exists
+        const idsToReplace = res.todo.map(n => n.id);
+        const filtered = updated.filter(n => !idsToReplace.includes(n.id));
+
+        filtered.splice(startIndex, 0, ...res.todo);
+        return filtered;
       });
     }
   };
 
-  const refreshPageByCreatedAt = async (createdAt: Date) => {
-    // Find the index where this unpinned note would fall
-    const index = moreNotes.findIndex(
-      note => new Date(note.createdAt) < new Date(createdAt)
-    );
+  const handlePin = async (note: Note) => {
+    // Remove the pinned note from moreNotes
+    setMoreNotes(prev => {
+      const filtered = prev.filter(n => n.id !== note.id);
+      return [note, ...filtered]; // simulate it went to top (SSR rendered)
+    });
 
-    // Determine page number from index
-    const inferredPage = index === -1 ? page : Math.floor(index / 20) + 2; // +2 since page 1 is SSR and moreNotes starts from page 2
-    await refreshPage(inferredPage - 1);
+    // Refresh page 2 to fill the first "missing" element
+    await refreshPage(2);
   };
 
-  const handleUnpin = async (item: Note) => {
-    await refreshPageByCreatedAt(item.createdAt);
+  const handleUnpin = async (note: Note) => {
+    // Remove it first from the top (SSR area)
+    setMoreNotes(prev => prev.filter(n => n.id !== note.id));
+
+    // Get all current unpinned notes plus the one we just unpinned
+    const res = await getTodo(userId, 2, 1000);
+    if (!res.success) return;
+
+    const allUnpinned = res.todo.filter(n => !n.pinned);
+    allUnpinned.push(note);
+
+    const sorted = allUnpinned.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    const index = sorted.findIndex(n => n.id === note.id);
+    const pageSize = 20;
+    const targetPage = Math.floor(index / pageSize) + 2;
+
+    // Reinsert it into the right place
+    await refreshPage(targetPage);
   };
 
   return (
@@ -103,8 +126,14 @@ export const NotesFeed = ({
         {Children.map(children, child =>
           isValidElement(child)
             ? cloneElement(
-                child as React.ReactElement<{ onUnpin: (item: Note) => void }>,
-                { onUnpin: handleUnpin }
+                child as React.ReactElement<{
+                  onUnpin: (item: Note) => void;
+                  onPin: (item: Note) => void;
+                }>,
+                {
+                  onUnpin: handleUnpin,
+                  onPin: handlePin,
+                }
               )
             : child
         )}
@@ -114,10 +143,10 @@ export const NotesFeed = ({
             item={item}
             userId={userId}
             key={item.id}
-            refreshPage={refreshPage}
             page={Math.floor(i / 20) + 2}
-            onUnpin={refreshPageByCreatedAt}
-          /> // Render on client
+            onUnpin={handleUnpin}
+            onPin={handlePin}
+          />
         ))}
       </section>
 
